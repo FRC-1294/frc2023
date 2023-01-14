@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -27,12 +28,12 @@ public class WestCoastDrive extends SubsystemBase {
 
   public WestCoastDrive() {
     //Left motors & group
-    frontLeftSparkMax = new CANSparkMax(0, null);
-    backLeftSparkMax = new CANSparkMax(0, null);
+    frontLeftSparkMax = new CANSparkMax(1, MotorType.kBrushless);
+    backLeftSparkMax = new CANSparkMax(2, MotorType.kBrushless);
     leftMotorGroup = new MotorControllerGroup(backLeftSparkMax, frontLeftSparkMax);
     //Right motors & group
-    frontRightSparkMax = new CANSparkMax(0, null);
-    backRightSparkMax = new CANSparkMax(0, null);
+    frontRightSparkMax = new CANSparkMax(4, MotorType.kBrushless);
+    backRightSparkMax = new CANSparkMax(3, MotorType.kBrushless);
     rightMotorGroup = new MotorControllerGroup(backRightSparkMax, frontRightSparkMax);
 
     driveBase = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
@@ -41,7 +42,6 @@ public class WestCoastDrive extends SubsystemBase {
 
   //Main drive function - Controls are for arcade drivestyle
   public void drive(double joystick1Y, double joystick2X){
-
     driveBase.arcadeDrive(joystick1Y, joystick2X);
 
   }
