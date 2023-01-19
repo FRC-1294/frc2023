@@ -18,8 +18,8 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    //SWERVE constants    
-    public static final double maxSpeed = 12.0;
+    // SWERVE constants    
+    public static final double kDriveMotorMaxSpeedMeterPerSecond = 12.0;
 
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
@@ -31,45 +31,41 @@ public final class Constants {
     public static final double kDriveGearRation = 1/10;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*kDriveGearRation / 60;
 
-    //Encoders
-    public static final double angleEncoderConversionFactor = 2*Math.PI/18;
-    public static final double driveEncoderConversionFactor = 1;
-
-    //PID
-    public static final Gains anglePID = new Gains(0.005, 0, 0, 0.0, 0.0, -0.5, 0.5, 0);
-    public static final Gains anglePIDFast = new Gains(0.005, 0, 0, 0.0, 0.0, -1, 1, 1);
-    public static final Gains fastPID = new Gains(0.05, 0.00001, 0.7, 0.0, 0.0, -1, 1, 1);
+    // Encoders
+    public static final double kAngularEncoderConversionFactor = 2 * Math.PI * 1.0/18;
 
     // Distance between right and left wheels
     public static final double kTrackWidth = Units.inchesToMeters(25.5);
-    public static double tuningSetpoint = 0;
     
-    // // Distance between front and back wheels
+    // Distance between front and back wheels
     public static final double kWheelBase = Units.inchesToMeters(25.5);
 
-    public static final Boolean tuningPID = true;
+    public static final Boolean kTuningPID = true;
+    public static double tuningSetpoint = 0;
     
-    //SPARK ids
-    public static final int frontLeftSteer = 14;//
-    public static final int frontLeftDrive = 13;//
+    // SPARK ids
+    public static final int kFrontLeftSteerMotorSparkID = 14;
+    public static final int kFrontLeftDriveMotorSparkID = 13;
     
-    public static final int frontRightSteer = 2;//
-    public static final int frontRightDrive = 4;//
+    public static final int kFrontRightSteerMotorSparkID = 2;
+    public static final int kFrontRightDriveMotorSparkID = 4;
 
-    public static final int rearLeftSteer = 3;//
-    public static final int rearLeftDrive = 12;//
+    public static final int kBackLeftSteerMotorSparkID = 3;
+    public static final int kBackLeftDriveMotorSparkID = 12;
 
-    public static final int rearRightSteer = 1;//
-    public static final int rearRightDrive = 5; // 
+    public static final int kBackRightSteerMotorSparkID = 1;
+    public static final int kBackRightDriveMotorSparkID = 5;
 
-    //TEJA IS COOL
+    // TEJA IS COOL
 
-    //Change this
+    // TODO: Intakes, please correct these values
+    public static final int kIntakeSolenoid1ChannelID = 13;
+    public static final int kCompressorModuleID = 1;
+
+    // TODO: Change this
     public static int rotJoystickPort = 0;
     public static int transJoystickPort = 1;
     public static double kP = 0;
     public static double kI = 0;
     public static double kD = 0;
-    public static int intakeSolenoid1ID;
-    public static int compressorID;
 }

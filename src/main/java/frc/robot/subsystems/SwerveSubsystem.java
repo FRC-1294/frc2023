@@ -27,10 +27,10 @@ import frc.robot.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
-  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,0,false, false);
-  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,0,true,true,0,false, false);
-  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,0,false,true,0,false, false);
-  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,0,true,true,0,false, false); 
+  private final SwerveModule frontLeft = new SwerveModule(Constants.kFrontLeftDriveMotorSparkID, Constants.kFrontLeftSteerMotorSparkID, 0,false, true,0,false, false);
+  private final SwerveModule frontRight = new SwerveModule(Constants.kFrontRightDriveMotorSparkID, Constants.kFrontRightSteerMotorSparkID,0,true,true,0,false, false);
+  private final SwerveModule backLeft = new SwerveModule(Constants.kBackLeftDriveMotorSparkID, Constants.kBackLeftSteerMotorSparkID,0,false,true,0,false, false);
+  private final SwerveModule backRight = new SwerveModule(Constants.kBackRightDriveMotorSparkID, Constants.kBackRightSteerMotorSparkID,0,true,true,0,false, false); 
 
   public SwerveDriveKinematics m_kinematics;
   private ChassisSpeeds chassisSpeeds1;

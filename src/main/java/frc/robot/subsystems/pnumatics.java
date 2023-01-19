@@ -13,15 +13,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class pnumatics extends SubsystemBase {
-  /** Creates a new pnumatics. */
     Solenoid intakeSolenoid1;
-    Solenoid intakeSolenoid2;
     Compressor phCompressor;
     AnalogPotentiometer pressureSensor;
     PneumaticHub hub;
   public pnumatics() {
-    intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.intakeSolenoid1ID);
-    phCompressor = new Compressor(Constants.compressorID, PneumaticsModuleType.REVPH);
+    intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.kIntakeSolenoid1ChannelID);
+    phCompressor = new Compressor(Constants.kCompressorModuleID, PneumaticsModuleType.REVPH);
     pressureSensor = new AnalogPotentiometer(0, 250, -13);
     hub = new PneumaticHub();
   }

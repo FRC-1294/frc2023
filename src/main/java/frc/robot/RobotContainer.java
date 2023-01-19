@@ -50,7 +50,7 @@ public class RobotContainer {
     moduleSelector.addOption("Back Left", allModules[2]);
     moduleSelector.addOption("Back Right", allModules[3]);
 
-    if (!Constants.tuningPID){swerve.setDefaultCommand(npc);}
+    if (!Constants.kTuningPID){swerve.setDefaultCommand(npc);}
     else{new SinglePID(moduleSelector.getSelected()).schedule();}
     
     SmartDashboard.putData("CHOOOSE", moduleSelector);
