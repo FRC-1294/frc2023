@@ -7,6 +7,12 @@
 
 package frc.robot;
 
+import java.nio.file.Path;
+import java.util.Dictionary;
+import java.util.HashMap;
+
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,14 +28,14 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
+  
+  String sCurveJsonPath = "paths/SCurve.wpilib.json";
+  Path sCurvePath = Filesystem.getDeployDirectory().toPath().resolve(sCurveJsonPath);
+  public static HashMap<String, Trajectory> paths = new HashMap<String, Trajectory>();
+
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+
     m_robotContainer = new RobotContainer();
   }
 
@@ -110,5 +116,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  
   }
 }

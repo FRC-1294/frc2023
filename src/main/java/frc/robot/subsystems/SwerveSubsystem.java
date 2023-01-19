@@ -42,7 +42,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private ChassisSpeeds chassisSpeeds1;
   private SwerveDriveOdometry m_odometry;
   private SwerveDrivePoseEstimator m_estimator;
-  AHRS navx = new AHRS(Port.kMXP);
+  public static AHRS navx = new AHRS(Port.kMXP);
   private Joysticks joy;
   SwerveModule [] rawMods;
 
