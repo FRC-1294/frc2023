@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.DefaultDriveCmd;
 import frc.robot.commands.PIDtuning;
@@ -34,7 +35,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Joysticks joys = new Joysticks();
   public final SwerveSubsystem swerve = new SwerveSubsystem(joys);
-  public final DefaultDriveCmd npc = new DefaultDriveCmd(joys, swerve);
+  public final AutoBalanceCommand npc = new AutoBalanceCommand(joys, swerve);
   public final PIDtuning pud = new PIDtuning(joys,swerve);
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
@@ -53,8 +54,10 @@ public class RobotContainer {
     moduleSelector.addOption("Back Left", allModules[2]);
     moduleSelector.addOption("Back Right", allModules[3]);
 
-    if (!Constants.tuningPID){swerve.setDefaultCommand(npc);}
-    else{new SinglePID(moduleSelector.getSelected()).schedule();}
+    swerve.setDefaultCommand(npc);
+
+    // if (!Constants.tuningPID){swerve.setDefaultCommand(npc);}
+    // else{new SinglePID(moduleSelector.getSelected()).schedule();}
     
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     configureButtonBindings();

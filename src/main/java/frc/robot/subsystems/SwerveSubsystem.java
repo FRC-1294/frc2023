@@ -42,7 +42,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private ChassisSpeeds chassisSpeeds1;
   private SwerveDriveOdometry m_odometry;
   private SwerveDrivePoseEstimator m_estimator;
-  public static AHRS navx = new AHRS(Port.kMXP);
+  public AHRS navx = new AHRS(Port.kMXP);
   private Joysticks joy;
   SwerveModule [] rawMods;
 
@@ -76,6 +76,9 @@ public class SwerveSubsystem extends SubsystemBase {
   public void resetGyro(){
     navx.reset();
   }
+
+
+
   public double getHeading(){
     return Math.IEEEremainder(navx.getAngle(), 360);
   }
@@ -138,4 +141,18 @@ public class SwerveSubsystem extends SubsystemBase {
     return new SwerveModule[]{frontLeft,frontRight,backLeft,backRight};
   }
 
+
+
+
+  public float getRoll(){
+    return this.navx.getRoll();
+  }
+
+  public float getYaw(){
+    return this.navx.getYaw();
+  }
+
+  public float getPitch(){
+    return this.navx.getPitch();
+  }
 }

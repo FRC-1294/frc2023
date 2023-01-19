@@ -22,33 +22,36 @@ public class AutoBalanceCommand extends CommandBase {
   //arbritrary - fix later with dynamic speed control :)
   double setSpeed = 1;
 
-  
+  Joysticks joyee;
+  SwerveSubsystem swervee;
 
-  public AutoBalanceCommand() {}
+  AHRS navx;
+
+  public AutoBalanceCommand(Joysticks joys, SwerveSubsystem swervee) {
+    this.joyee = joys;
+    this.swervee = swervee;
+
+    addRequirements(swervee);
+  }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     displacement = 0;
-    roll = SwerveSubsystem.navx.getRoll();
-    pitch = SwerveSubsystem.navx.getPitch();
-    yaw = SwerveSubsystem.navx.getYaw();
+    roll = swervee.getRoll();
+    pitch = swervee.getPitch();
+    yaw = swervee.getYaw();
   }
 
   
   @Override
   public void execute() {
-    roll = SwerveSubsystem.navx.getRoll();
-    pitch = SwerveSubsystem.navx.getPitch();
-    yaw = SwerveSubsystem.navx.getYaw();
+    roll = swervee.getRoll();
+    pitch = swervee.getPitch();
+    yaw = swervee.getYaw();
 
 
     putNumbersInDashboard();
-
-    if (Joysticks.getResetGyro()) {
-      System.out.println("RESET GYRO!");
-      SwerveSubsystem.navx.reset();
-    }
 
   }
 
