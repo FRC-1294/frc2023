@@ -32,7 +32,7 @@ public class DriveWithJoySticks extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    westCoastDrive.drive(transJoyStick.getY(), rotJoyStick.getX());
+    westCoastDrive.drive(rotJoyStick.getX()/1.5,transJoyStick.getY());
   }
 
   // Called once the command ends or is interrupted.
