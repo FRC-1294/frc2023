@@ -20,17 +20,15 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutonomousDrive extends CommandBase {
-  /** Creates a new AutonomousDrive. */
   SwerveSubsystem swerve;
   SwerveControllerCommand yeet;
-  Boolean done = false;
+  boolean done = false;
   public AutonomousDrive(SwerveSubsystem s) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = s;
     addRequirements(swerve);
     TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
       3,
-      1) .setKinematics(this.swerve.m_kinematics);
+      1).setKinematics(this.swerve.m_kinematics);
 
     // 2. Generate trajectory
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(

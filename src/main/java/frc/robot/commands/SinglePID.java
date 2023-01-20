@@ -15,7 +15,7 @@ public class SinglePID extends CommandBase {
   SwerveSubsystem swerve;
   SwerveModule selectedModule;
   Joysticks joys;
-  Double sp;
+  double sp;
   public SinglePID(SwerveModule module) {
     System.out.println("in the commanfd :)");
     this.selectedModule = module;
