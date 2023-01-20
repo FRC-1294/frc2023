@@ -40,8 +40,11 @@ public final class Constants {
     // Distance between front and back wheels
     public static final double kWheelBase = Units.inchesToMeters(25.5);
 
-    public static final Boolean kTuningPID = true;
+    // Use PIDtunning.java to find Global.kP and Global.kD values
+    public static final boolean kTuningPID = true;
     
+    public static final Gains kSwerveModuleSteeringMotorPIDConstants = new Gains(0.1, 0, 0);
+
     // SPARK ids
     public static final int kFrontLeftSteerMotorSparkID = 14;
     public static final int kFrontLeftDriveMotorSparkID = 13;

@@ -8,61 +8,83 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class SwerveModule {
-
-    private int m_MotorTransID;
-    private int m_MotorRotID;
-    private int m_UniversalEncoderID;
-    private CANSparkMax transMotor;
-    private CANSparkMax rotMotor;
-    private RelativeEncoder transEncoder;
-    private RelativeEncoder rotEncoder;
-    private AnalogEncoder universalEncoder;
-    public SparkMaxPIDController rotPID;
-    public PIDController rotationPIDTest;
-    private boolean isAbsoluteEncoder;
-    private double universalEncoderOffset;
-    private boolean m_transInverted;
-    private boolean m_rotInverted;
-    private boolean encoderInverted;
     
-    public SwerveModule(int motorTransID, int motorRotID, int universalEncoderID,
-    boolean transInverted, boolean rotInverted, double universalEncoderOffsetinit,
-    boolean universalEncoderInverted, boolean isAbsEncoder){
-        this.encoderInverted = universalEncoderInverted;
-        this.isAbsoluteEncoder=isAbsEncoder;
-        this.m_MotorTransID = motorTransID;
-        this.m_UniversalEncoderID = universalEncoderID;
-        this.m_MotorRotID = motorRotID;
-        this.m_transInverted = transInverted;
-        this.m_rotInverted = rotInverted;
-        this.universalEncoderOffset = universalEncoderOffsetinit;
+    public final boolean HasAbsoluteEncoder;
+    private boolean absEncoderInverted;
+    private AnalogEncoder absEncoder;
+    private double absEncoderOffsetRadians;
+
+    private final CANSparkMax transMotor;
+    private final RelativeEncoder transEncoder;
+
+    private final CANSparkMax rotMotor;
+    private final RelativeEncoder rotEncoder;
+    
+    private final PIDController rotationPIDController;    
         
-        transMotor = new CANSparkMax(this.m_MotorTransID, MotorType.kBrushless);
+    private final String swerveModuleInfo;
+    
+    public SwerveModule(
+        int transMotorID, 
+        int rotMotorID, 
+        int absEncoderID,
+        boolean transInverted, 
+        boolean rotInverted, 
+        double absEncoderOffsetInit,
+        boolean absEncoderInverted, 
+        boolean hasAbsEncoder) {
         
-        rotMotor = new CANSparkMax(this.m_MotorRotID, MotorType.kBrushless);
-        if (isAbsEncoder){
-            universalEncoder = new AnalogEncoder(this.m_UniversalEncoderID);
+        StringBuilder buf = new StringBuilder();        
+        this.HasAbsoluteEncoder = hasAbsEncoder;
+        buf.append("SwerveModule: HasAbsoluteEncoder = " + String.valueOf(hasAbsEncoder) + ", " );
+
+        if (this.HasAbsoluteEncoder){
+            absEncoder = new AnalogEncoder(absEncoderID);
+            buf.append("absEncoderID = " + absEncoderID + ", ");
+
+            this.absEncoderInverted = absEncoderInverted;
+            buf.append("absEncoderInverted = " +  String.valueOf(absEncoderInverted) + ", ");
+    
+            this.absEncoderOffsetRadians = absEncoderOffsetInit;
+            buf.append("absEncoderOffsetRadians = " +  absEncoderOffsetRadians + ", ");    
         }
 
-        transMotor.setInverted(this.m_transInverted);
-        rotMotor.setInverted(this.m_rotInverted);
+        transMotor = new CANSparkMax(transMotorID, MotorType.kBrushless);
+        buf.append("transMotorID = " + transMotorID + ", ");
+
+        transMotor.setInverted(transInverted);
+        buf.append("transInverted = " + transInverted + ", ");
 
         transEncoder = transMotor.getEncoder();
+
+        rotMotor = new CANSparkMax(rotMotorID, MotorType.kBrushless);
+        buf.append("rotMotorID = " + rotMotorID + ", ");
+
+        rotMotor.setInverted(rotInverted);
+        buf.append("rotInverted = " + rotInverted + ", ");
+
         rotEncoder = rotMotor.getEncoder();
-        
+                       
+        rotationPIDController = new PIDController(
+            Constants.kSwerveModuleSteeringMotorPIDConstants.kP,
+            Constants.kSwerveModuleSteeringMotorPIDConstants.kI, 
+            Constants.kSwerveModuleSteeringMotorPIDConstants.kD);
+
+        buf.append("rotationPIDController: " + Constants.kSwerveModuleSteeringMotorPIDConstants);
+
+        rotationPIDController.enableContinuousInput(-Math.PI, Math.PI);
+
         resetEncoders();
-        rotPID = rotMotor.getPIDController();
-        rotationPIDTest = new PIDController(0.1, 0, 0);
-        rotationPIDTest.enableContinuousInput(-Math.PI,Math.PI);
-        
+        swerveModuleInfo = buf.toString();
     }
+
     public double getTransPosition(){
         return transEncoder.getPosition(); 
     }
+
     public double getRotPosition(){
         return rotEncoder.getPosition();
     }
@@ -76,11 +98,11 @@ public class SwerveModule {
     }
 
     public double getUniversalEncoderRad(){
-        if (isAbsoluteEncoder) {
-            double angle = universalEncoder.getAbsolutePosition();
+        if (this.HasAbsoluteEncoder) {
+            double angle = absEncoder.getAbsolutePosition();
             angle*=2.0 * Math.PI;
-            angle-= universalEncoderOffset;
-            angle = this.encoderInverted ? -angle : angle;
+            angle-= absEncoderOffsetRadians;
+            angle = this.absEncoderInverted ? -angle : angle;
             return angle;
         }
         return 0;
@@ -97,32 +119,37 @@ public class SwerveModule {
 
     public void setDesiredState(SwerveModuleState desiredState){
         
-        if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) 
-        {
+        if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
             stop();
             return;
         }
 
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
-        SmartDashboard.putNumber("RotationPosition"+this.m_MotorRotID, getRotPosition());
-        SmartDashboard.putNumber("DesiredState"+this.m_MotorRotID, desiredState.angle.getRadians());
-       // if (this.m_transInverted){transMotor.set(-desiredState.speedMetersPerSecond/Constants.maxSpeed);}
-        transMotor.set(desiredState.speedMetersPerSecond/Constants.kDriveMotorMaxSpeedMeterPerSecond);
-        rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*Constants.kAngularEncoderConversionFactor, desiredState.angle.getRadians()));
-        //System.out.println("setPoint is: "+ getRotPosition());
+
+        // if (this.m_transInverted) {
+        //     transMotor.set(-desiredState.speedMetersPerSecond/Constants.maxSpeed);
+        // }
+        transMotor.set(desiredState.speedMetersPerSecond / Constants.kDriveMotorMaxSpeedMeterPerSecond);
+
+        SmartDashboard.putNumber("RotationPosition" + toString(), getRotPosition());
+        SmartDashboard.putNumber("DesiredRotation" + toString(), desiredState.angle.getRadians());
+        rotMotor.set(rotationPIDController.calculate(rotEncoder.getPosition()*Constants.kAngularEncoderConversionFactor, desiredState.angle.getRadians()));                
     }
+
     public void updatePositions(Double setPoint){
-        System.out.println("Hewwo");
-        rotationPIDTest.setPID(Global.kP, Global.kI, Global.kD);
-        rotationPIDTest.disableContinuousInput();
-        double sp = rotationPIDTest.calculate(rotEncoder.getPosition()*2*Math.PI/18, setPoint);
+        rotationPIDController.setPID(Global.kP, Global.kI, Global.kD);
+
+        //TODO: Validate
+        rotationPIDController.disableContinuousInput();
+
+        double sp = rotationPIDController.calculate(rotEncoder.getPosition()*2*Math.PI/18, setPoint);
         rotMotor.set(sp);
     }
 
     public void returnToOrigin(){
         System.out.println("In PID loop");
-        rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*2*Math.PI/18, 0));
-        rotationPIDTest.setTolerance(0);
+        rotMotor.set(rotationPIDController.calculate(rotEncoder.getPosition()*2*Math.PI/18, 0));
+        rotationPIDController.setTolerance(0);
     }
 
     public SwerveModulePosition getModulePos(){
@@ -135,12 +162,17 @@ public class SwerveModule {
     }
 
     public PIDController getPIDController(){
-        return this.rotationPIDTest;
+        return this.rotationPIDController;
     }
 
     public void setPidController(double p, double i, double d){
-        rotationPIDTest.setP(p);
-        rotationPIDTest.setI(i);
-        rotationPIDTest.setD(d);
+        rotationPIDController.setP(p);
+        rotationPIDController.setI(i);
+        rotationPIDController.setD(d);
+    }
+
+    @Override
+    public String toString() {
+        return swerveModuleInfo;
     }
 }

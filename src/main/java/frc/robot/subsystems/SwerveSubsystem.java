@@ -19,13 +19,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
+  
   //Bevel Gear must be facing to the left in order to work
   private final SwerveModule frontLeft = new SwerveModule(Constants.kFrontLeftDriveMotorSparkID, Constants.kFrontLeftSteerMotorSparkID, 0,false, true,0,false, false);
   private final SwerveModule frontRight = new SwerveModule(Constants.kFrontRightDriveMotorSparkID, Constants.kFrontRightSteerMotorSparkID,0,true,true,0,false, false);
@@ -46,7 +46,6 @@ public class SwerveSubsystem extends SubsystemBase {
       new Translation2d(-Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
       new Translation2d(-Constants.kWheelBase / 2, Constants.kTrackWidth / 2));
     m_odometry = new SwerveDriveOdometry(m_kinematics, getRotation2d(), this.getModuleStates());
-    //m_estimator = new SwerveDrivePoseEstimator(gyroAngle, initialPoseMeters, kinematics, stateStdDevs, localMeasurementStdDevs, visionMeasurementStdDevs)
     frontLeft.resetEncoders();
     frontRight.resetEncoders();
     backLeft.resetEncoders();

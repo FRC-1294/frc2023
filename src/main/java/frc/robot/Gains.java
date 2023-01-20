@@ -13,6 +13,6 @@ public class Gains {
 
 	@Override
 	public String toString() {
-		return "P: " + kP + " I: " + kI + " D: " + kD;
+		return "kP: " + kP + " kI: " + kI + " kD: " + kD;
 	}
 }
