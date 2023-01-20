@@ -26,7 +26,7 @@ import frc.robot.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
   
-  //Bevel Gear must be facing to the left in order to work
+  // Bevel Gear must be facing to the left in order to work
   private final SwerveModule frontLeft = new SwerveModule(Constants.kFrontLeftDriveMotorSparkID, Constants.kFrontLeftSteerMotorSparkID, 0,false, true,0,false, false);
   private final SwerveModule frontRight = new SwerveModule(Constants.kFrontRightDriveMotorSparkID, Constants.kFrontRightSteerMotorSparkID,0,true,true,0,false, false);
   private final SwerveModule backLeft = new SwerveModule(Constants.kBackLeftDriveMotorSparkID, Constants.kBackLeftSteerMotorSparkID,0,false,true,0,false, false);
@@ -95,10 +95,10 @@ public class SwerveSubsystem extends SubsystemBase {
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
     this.setModuleStates(moduleStates);
-    SmartDashboard.putNumber("Module1CurrentROT", frontLeft.getRotPosition());
-    SmartDashboard.putNumber("Module2CurrentROT", frontRight.getRotPosition());
-    SmartDashboard.putNumber("Module3CurrentROT", backLeft.getRotPosition());
-    SmartDashboard.putNumber("Module4CurrentROT", backRight.getRotPosition());
+    SmartDashboard.putNumber("Module1CurrentROT", frontLeft.getRotPositionRadians());
+    SmartDashboard.putNumber("Module2CurrentROT", frontRight.getRotPositionRadians());
+    SmartDashboard.putNumber("Module3CurrentROT", backLeft.getRotPositionRadians());
+    SmartDashboard.putNumber("Module4CurrentROT", backRight.getRotPositionRadians());
     SmartDashboard.putNumber("ChassisSpeeds POT", chassisSpeeds1.omegaRadiansPerSecond);
     SmartDashboard.putNumber("ChassisSpeed X", chassisSpeeds1.vxMetersPerSecond);
     SmartDashboard.putNumber("ChassisSpeed Y", chassisSpeeds1.vyMetersPerSecond);

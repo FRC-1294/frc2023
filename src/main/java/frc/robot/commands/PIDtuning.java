@@ -40,10 +40,10 @@ public class PIDtuning extends CommandBase {
         mod.updatePositions(Global.tuningSetpoint);
       }
       
-      SmartDashboard.putNumber("Module1CurrentROT",swerveee.getRawModules()[0].getRotPosition());
-      SmartDashboard.putNumber("Module2CurrentROT", swerveee.getRawModules()[1].getRotPosition());
-      SmartDashboard.putNumber("Module3CurrentROT", swerveee.getRawModules()[2].getRotPosition());
-      SmartDashboard.putNumber("Module4CurrentROT", swerveee.getRawModules()[3].getRotPosition());
+      SmartDashboard.putNumber("Module1CurrentROT",swerveee.getRawModules()[0].getRotPositionRadians());
+      SmartDashboard.putNumber("Module2CurrentROT", swerveee.getRawModules()[1].getRotPositionRadians());
+      SmartDashboard.putNumber("Module3CurrentROT", swerveee.getRawModules()[2].getRotPositionRadians());
+      SmartDashboard.putNumber("Module4CurrentROT", swerveee.getRawModules()[3].getRotPositionRadians());
   }}
 
   @Override

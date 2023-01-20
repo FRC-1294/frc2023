@@ -67,6 +67,8 @@ public class SwerveModule {
         buf.append("rotInverted = " + rotInverted + ", ");
 
         rotEncoder = rotMotor.getEncoder();
+        // TODO: Uncomment below line and fix getRotPositionRadians to return rotEncoder.getPosition()
+        // rotEncoder.setPositionConversionFactor(Constants.kAngularEncoderConversionFactor);
                        
         rotationPIDController = new PIDController(
             Constants.kSwerveModuleSteeringMotorPIDConstants.kP,
@@ -85,8 +87,8 @@ public class SwerveModule {
         return transEncoder.getPosition(); 
     }
 
-    public double getRotPosition(){
-        return rotEncoder.getPosition();
+    public double getRotPositionRadians(){
+        return rotEncoder.getPosition() * Constants.kAngularEncoderConversionFactor;
     }
 
     public double getTransVelocity(){
@@ -114,7 +116,7 @@ public class SwerveModule {
     }
 
     public SwerveModuleState getState(){
-        return new SwerveModuleState(getTransVelocity(),new Rotation2d(getRotPosition()*2*Math.PI/18));
+        return new SwerveModuleState(getTransVelocity(),new Rotation2d(getRotPositionRadians()));
     }
 
     public void setDesiredState(SwerveModuleState desiredState){
@@ -126,34 +128,32 @@ public class SwerveModule {
 
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
-        // if (this.m_transInverted) {
-        //     transMotor.set(-desiredState.speedMetersPerSecond/Constants.maxSpeed);
-        // }
+        // if (this.m_transInverted) { transMotor.set(-desiredState.speedMetersPerSecond/Constants.maxSpeed); }
         transMotor.set(desiredState.speedMetersPerSecond / Constants.kDriveMotorMaxSpeedMeterPerSecond);
 
-        SmartDashboard.putNumber("RotationPosition" + toString(), getRotPosition());
+        SmartDashboard.putNumber("RotationPosition" + toString(), getRotPositionRadians());
         SmartDashboard.putNumber("DesiredRotation" + toString(), desiredState.angle.getRadians());
-        rotMotor.set(rotationPIDController.calculate(rotEncoder.getPosition()*Constants.kAngularEncoderConversionFactor, desiredState.angle.getRadians()));                
+        rotMotor.set(rotationPIDController.calculate(getRotPositionRadians(), desiredState.angle.getRadians()));                
     }
 
     public void updatePositions(Double setPoint){
         rotationPIDController.setPID(Global.kP, Global.kI, Global.kD);
 
-        //TODO: Validate
+        //TODO: why?
         rotationPIDController.disableContinuousInput();
 
-        double sp = rotationPIDController.calculate(rotEncoder.getPosition()*2*Math.PI/18, setPoint);
-        rotMotor.set(sp);
+        double speed = rotationPIDController.calculate(getRotPositionRadians(), setPoint);
+        rotMotor.set(speed);
     }
 
     public void returnToOrigin(){
         System.out.println("In PID loop");
-        rotMotor.set(rotationPIDController.calculate(rotEncoder.getPosition()*2*Math.PI/18, 0));
+        rotMotor.set(rotationPIDController.calculate(getRotPositionRadians(), 0));
         rotationPIDController.setTolerance(0);
     }
 
     public SwerveModulePosition getModulePos(){
-        return new SwerveModulePosition(transEncoder.getPosition()*Constants.kDriveEncoderRPM2MeterPerSec,new Rotation2d(getRotPosition()));
+        return new SwerveModulePosition(transEncoder.getPosition()*Constants.kDriveEncoderRPM2MeterPerSec,new Rotation2d(getRotPositionRadians()));
     }
 
     public void stop() {
