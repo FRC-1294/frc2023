@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class SwerveModule {
@@ -137,6 +139,11 @@ public class SwerveModule {
         rotMotor.set(0);
 
     }
+
+    public void setMode(IdleMode mode){
+        transMotor.setIdleMode(mode);
+    }
+
     public PIDController getPIDController(){
         return this.rotationPIDTest;
     }

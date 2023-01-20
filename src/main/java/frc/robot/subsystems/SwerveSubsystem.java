@@ -27,6 +27,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
@@ -141,7 +143,19 @@ public class SwerveSubsystem extends SubsystemBase {
     return new SwerveModule[]{frontLeft,frontRight,backLeft,backRight};
   }
 
+  public void stopAllAndBrake(){
+    frontLeft.stop();
+    frontRight.stop();
+    backLeft.stop();
+    backRight.stop();
 
+    frontLeft.setMode(IdleMode.kBrake);
+    backLeft.setMode(IdleMode.kBrake);
+    backRight.setMode(IdleMode.kBrake);
+    frontRight.setMode(IdleMode.kBrake);
+
+
+  }
 
 
   public float getRoll(){
