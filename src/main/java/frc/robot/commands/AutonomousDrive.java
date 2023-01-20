@@ -32,7 +32,7 @@ public class AutonomousDrive extends CommandBase {
       3,
       1) .setKinematics(this.swerve.m_kinematics);
 
-// 2. Generate trajectory
+    // 2. Generate trajectory
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
           new Pose2d(0, 0, new Rotation2d(0)),
           List.of(
@@ -58,14 +58,12 @@ public class AutonomousDrive extends CommandBase {
       this.swerve);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     this.swerve.resetRobotPose();
     yeet.schedule();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (yeet.isFinished()){
@@ -73,11 +71,9 @@ public class AutonomousDrive extends CommandBase {
     }
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return done;
