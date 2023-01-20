@@ -6,13 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Global;
 import frc.robot.SwerveModule;
 import frc.robot.subsystems.Joysticks;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class SinglePID extends CommandBase {
-  /** Creates a new SinglePID. */
   SwerveSubsystem swerve;
   SwerveModule selectedModule;
   Joysticks joys;
@@ -20,11 +19,10 @@ public class SinglePID extends CommandBase {
   public SinglePID(SwerveModule module) {
     System.out.println("in the commanfd :)");
     this.selectedModule = module;
-    SmartDashboard.putNumber("kP", Constants.kP);
-    SmartDashboard.putNumber("kI", Constants.kI);
-    SmartDashboard.putNumber("kD", Constants.kD);
-    SmartDashboard.putNumber("setPointReal", Constants.tuningSetpoint);
-    
+    SmartDashboard.putNumber("kP", Global.kP);
+    SmartDashboard.putNumber("kI", Global.kI);
+    SmartDashboard.putNumber("kD", Global.kD);
+    SmartDashboard.putNumber("setPointReal", Global.tuningSetpoint);    
   }
 
   // Called when the command is initially scheduled.
@@ -38,15 +36,14 @@ public class SinglePID extends CommandBase {
   public void execute() {
     System.out.println("in the execute");
 
-    Constants.kP = SmartDashboard.getNumber("kP", 0);
-    Constants.kI = SmartDashboard.getNumber("kI", 0);
-    Constants.kD = SmartDashboard.getNumber("kD", 0);
+    Global.kP = SmartDashboard.getNumber("kP", 0);
+    Global.kI = SmartDashboard.getNumber("kI", 0);
+    Global.kD = SmartDashboard.getNumber("kD", 0);
 
     SmartDashboard.putNumber("Setpoint", 0);
     
-    SmartDashboard.putNumber("setPointReal", Constants.tuningSetpoint);
-    sp = SmartDashboard.getNumber("setPointReal", 0);
-  
+    SmartDashboard.putNumber("setPointReal", Global.tuningSetpoint);
+    sp = SmartDashboard.getNumber("setPointReal", 0);  
     SmartDashboard.putNumber("Module1CurrentROT",this.selectedModule.getRotPosition());
     
     selectedModule.updatePositions(sp);

@@ -41,7 +41,6 @@ public final class Constants {
     public static final double kWheelBase = Units.inchesToMeters(25.5);
 
     public static final Boolean kTuningPID = true;
-    public static double tuningSetpoint = 0;
     
     // SPARK ids
     public static final int kFrontLeftSteerMotorSparkID = 14;
@@ -56,16 +55,12 @@ public final class Constants {
     public static final int kBackRightSteerMotorSparkID = 1;
     public static final int kBackRightDriveMotorSparkID = 5;
 
-    // TEJA IS COOL
+    // Joystick ports
+    public static int kRotationJoystickPort = 0;
+    public static int kDrivingJoystickPort = 1;
 
+    // TEJA IS COOL
     // TODO: Intakes, please correct these values
     public static final int kIntakeSolenoid1ChannelID = 13;
     public static final int kCompressorModuleID = 1;
-
-    // TODO: Change this
-    public static int rotJoystickPort = 0;
-    public static int transJoystickPort = 1;
-    public static double kP = 0;
-    public static double kI = 0;
-    public static double kD = 0;
 }

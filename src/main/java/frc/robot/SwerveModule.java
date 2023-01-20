@@ -113,7 +113,7 @@ public class SwerveModule {
     }
     public void updatePositions(Double setPoint){
         System.out.println("Hewwo");
-        rotationPIDTest.setPID(Constants.kP, Constants.kI, Constants.kD);
+        rotationPIDTest.setPID(Global.kP, Global.kI, Global.kD);
         rotationPIDTest.disableContinuousInput();
         double sp = rotationPIDTest.calculate(rotEncoder.getPosition()*2*Math.PI/18, setPoint);
         rotMotor.set(sp);

@@ -8,8 +8,8 @@ public class Joysticks {
     Joystick rJoystick;
     Joystick tJoystick;
     public Joysticks(){
-        rJoystick = new Joystick (Constants.rotJoystickPort);
-        tJoystick = new Joystick (Constants.transJoystickPort);
+        rJoystick = new Joystick (Constants.kRotationJoystickPort);
+        tJoystick = new Joystick (Constants.kDrivingJoystickPort);
     }
     public boolean resetGyro(){return rJoystick.getRawButton(3);}
     public double getX(){return tJoystick.getY();}
