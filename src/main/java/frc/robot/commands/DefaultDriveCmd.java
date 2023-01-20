@@ -12,14 +12,12 @@ import frc.robot.subsystems.Joysticks;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class DefaultDriveCmd extends CommandBase {
-  /** Creates a new DefaultDriveCmd. */
   SwerveSubsystem swerveee;
   Joysticks joyee;
   private SlewRateLimiter xLimiter;
   private SlewRateLimiter yLimiter;
   private SlewRateLimiter turningLimiter;
   public DefaultDriveCmd(Joysticks joys, SwerveSubsystem swerve) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.joyee = joys;
     this.swerveee = swerve;
     xLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAccelerationUnitsPerSecond*10);
@@ -28,14 +26,11 @@ public class DefaultDriveCmd extends CommandBase {
     addRequirements(swerve);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("HI");
     double x= this.joyee.getX();
     double y = this.joyee.getY();
     double rot = this.joyee.getRot();
@@ -44,7 +39,7 @@ public class DefaultDriveCmd extends CommandBase {
     y = Math.abs(y) > 0.15 ? y : 0.0;
     rot = Math.abs(rot) > 0.05 ? rot : 0.0;
       
-      // 3. Make the driving smoother
+    // 3. Make the driving smoother
     x = xLimiter.calculate(x) * Constants.kTeleDriveMaxAccelerationUnitsPerSecond*1.4;
     y = yLimiter.calculate(y) * Constants.kTeleDriveMaxAccelerationUnitsPerSecond*1.4;
     rot= turningLimiter.calculate(rot)
@@ -52,7 +47,6 @@ public class DefaultDriveCmd extends CommandBase {
     swerveee.setMotors(x, y, rot);
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     //System.out.println("End");
@@ -73,7 +67,6 @@ public class DefaultDriveCmd extends CommandBase {
     return gf;
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;

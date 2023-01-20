@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants;
 
-/** Add your docs here. */
 public class Joysticks {
     Joystick rJoystick;
     Joystick tJoystick;

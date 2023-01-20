@@ -96,7 +96,7 @@ public class SwerveSubsystem extends SubsystemBase {
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
     this.setModuleStates(moduleStates);
-    SmartDashboard.putNumber("Module1CurrentROT",frontLeft.getRotPosition());
+    SmartDashboard.putNumber("Module1CurrentROT", frontLeft.getRotPosition());
     SmartDashboard.putNumber("Module2CurrentROT", frontRight.getRotPosition());
     SmartDashboard.putNumber("Module3CurrentROT", backLeft.getRotPosition());
     SmartDashboard.putNumber("Module4CurrentROT", backRight.getRotPosition());
