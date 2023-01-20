@@ -17,18 +17,21 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutonomousDrive extends CommandBase {
-  SwerveSubsystem swerve;
-  SwerveControllerCommand yeet;
-  boolean done = false;
-  public AutonomousDrive(SwerveSubsystem s) {
-    this.swerve = s;
-    addRequirements(swerve);
+  
+  private final SwerveSubsystem driveSubsystem;
+  private final SwerveControllerCommand yeet;
+  private boolean done = false;
+
+  public AutonomousDrive(SwerveSubsystem swerveSubsystem) {
+    this.driveSubsystem = swerveSubsystem;
+    addRequirements(driveSubsystem);
     TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
       3,
-      1).setKinematics(this.swerve.m_kinematics);
+      1).setKinematics(Constants.kSwerveDriveKinematics);
 
     // 2. Generate trajectory
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
@@ -47,18 +50,18 @@ public class AutonomousDrive extends CommandBase {
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
     yeet = new SwerveControllerCommand(
       trajectory,
-      this.swerve::getRobotPose,
-      this.swerve.m_kinematics,
+      this.driveSubsystem::getRobotPose,
+      Constants.kSwerveDriveKinematics,
       xController,
       yController,
       thetaController,
-      this.swerve::setModuleStates,
-      this.swerve);
+      this.driveSubsystem::setModuleStates,
+      this.driveSubsystem);
   }
 
   @Override
   public void initialize() {
-    this.swerve.resetRobotPose();
+    this.driveSubsystem.resetRobotPose();
     yeet.schedule();
   }
 

@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -31,14 +33,20 @@ public final class Constants {
     public static final double kDriveGearRation = 1/10;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*kDriveGearRation / 60;
 
-    // Encoders
-    public static final double kAngularEncoderConversionFactor = 2 * Math.PI * 1.0/18;
-
     // Distance between right and left wheels
     public static final double kTrackWidth = Units.inchesToMeters(25.5);
     
     // Distance between front and back wheels
     public static final double kWheelBase = Units.inchesToMeters(25.5);
+
+    public static final SwerveDriveKinematics kSwerveDriveKinematics = new SwerveDriveKinematics(
+      new Translation2d(Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
+      new Translation2d(Constants.kWheelBase / 2, Constants.kTrackWidth / 2),
+      new Translation2d(-Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
+      new Translation2d(-Constants.kWheelBase / 2, Constants.kTrackWidth / 2));
+
+    // Encoders
+    public static final double kAngularEncoderConversionFactor = 2 * Math.PI * 1.0/18;
 
     // Use PIDtunning.java to find Global.kP and Global.kD values
     public static final boolean kTuningPID = true;
