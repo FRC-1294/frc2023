@@ -7,18 +7,20 @@ package frc.robot.commands;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.InputDevice;
 import frc.robot.SwerveModule;
-import frc.robot.subsystems.Joysticks;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class DefaultDriveCmd extends CommandBase {
+
   SwerveSubsystem swerveee;
-  Joysticks joyee;
+  InputDevice inputDevice;
   private SlewRateLimiter xLimiter;
   private SlewRateLimiter yLimiter;
   private SlewRateLimiter turningLimiter;
-  public DefaultDriveCmd(Joysticks joys, SwerveSubsystem swerve) {
-    this.joyee = joys;
+
+  public DefaultDriveCmd(InputDevice inputDevice, SwerveSubsystem swerve) {
+    this.inputDevice = inputDevice;
     this.swerveee = swerve;
     xLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAccelerationUnitsPerSecond*10);
     yLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAccelerationUnitsPerSecond*10);
@@ -31,10 +33,10 @@ public class DefaultDriveCmd extends CommandBase {
 
   @Override
   public void execute() {
-    double x= this.joyee.getX();
-    double y = this.joyee.getY();
-    double rot = this.joyee.getRot();
-  
+    double x= this.inputDevice.getX();
+    double y = this.inputDevice.getY();
+    double rot = this.inputDevice.getRot();
+    
     x = Math.abs(x) > 0.15 ? x : 0.0;
     y = Math.abs(y) > 0.15 ? y : 0.0;
     rot = Math.abs(rot) > 0.05 ? rot : 0.0;

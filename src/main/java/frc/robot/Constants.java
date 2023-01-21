@@ -20,58 +20,69 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    // SWERVE constants    
-    public static final double kDriveMotorMaxSpeedMeterPerSecond = 12.0;
 
-    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
+  // Input  
+  public static final int kXboxControllerPort = 0;
+  public static final int kXboxControllerRobotOrientedButtonIdx = 1;
 
-    public static final double kTeleDriveMaxSpeedMetersPerSecond = 1;
-    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
-    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
-    public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 4;
-    public static final double kDriveEncoderRot2Meter = Math.PI * Units.inchesToMeters(4);
-    public static final double kDriveGearRation = 1/10;
-    public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*kDriveGearRation / 60;
+  public static final int kXboxControllerYAxis = 1;
+  public static final int kXboxControllerXAxis = 0;
+  public static final int kXboxControllerRotAxis = 4;
+  
+  public static final double kDeadband = 0.05;  
 
-    // Distance between right and left wheels
-    public static final double kTrackWidth = Units.inchesToMeters(25.5);
-    
-    // Distance between front and back wheels
-    public static final double kWheelBase = Units.inchesToMeters(25.5);
+  // SWERVE constants 
+  public static final double kDriveMotorMaxSpeedMeterPerSecond = 12.0;
 
-    public static final SwerveDriveKinematics kSwerveDriveKinematics = new SwerveDriveKinematics(
-      new Translation2d(Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
-      new Translation2d(Constants.kWheelBase / 2, Constants.kTrackWidth / 2),
-      new Translation2d(-Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
-      new Translation2d(-Constants.kWheelBase / 2, Constants.kTrackWidth / 2));
+  public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
-    // Encoders
-    public static final double kAngularEncoderConversionFactor = 2 * Math.PI * 1.0/18;
+  public static final double kTeleDriveMaxSpeedMetersPerSecond = 1;
+  public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
+  public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
+  public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 4;
+  public static final double kDriveEncoderRot2Meter = Math.PI * Units.inchesToMeters(4);
+  public static final double kDriveGearRation = 1/10;
+  public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*kDriveGearRation / 60;
 
-    // Use PIDtunning.java to find Global.kP and Global.kD values
-    public static final boolean kTuningPID = true;
-    
-    public static final Gains kSwerveModuleSteeringMotorPIDConstants = new Gains(0.1, 0, 0);
+  // Distance between right and left wheels
+  public static final double kTrackWidth = Units.inchesToMeters(25.5);
+  
+  // Distance between front and back wheels
+  public static final double kWheelBase = Units.inchesToMeters(25.5);
 
-    // SPARK ids
-    public static final int kFrontLeftSteerMotorSparkID = 14;
-    public static final int kFrontLeftDriveMotorSparkID = 13;
-    
-    public static final int kFrontRightSteerMotorSparkID = 2;
-    public static final int kFrontRightDriveMotorSparkID = 4;
+  public static final SwerveDriveKinematics kSwerveDriveKinematics = new SwerveDriveKinematics(
+    new Translation2d(Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
+    new Translation2d(Constants.kWheelBase / 2, Constants.kTrackWidth / 2),
+    new Translation2d(-Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
+    new Translation2d(-Constants.kWheelBase / 2, Constants.kTrackWidth / 2));
 
-    public static final int kBackLeftSteerMotorSparkID = 3;
-    public static final int kBackLeftDriveMotorSparkID = 12;
+  // Encoders
+  public static final double kAngularEncoderConversionFactor = 2 * Math.PI * 1.0/18;
 
-    public static final int kBackRightSteerMotorSparkID = 1;
-    public static final int kBackRightDriveMotorSparkID = 5;
+  // Use PIDtunning.java to find Global.kP and Global.kD values
+  public static final boolean kTuningPID = true;
+  
+  public static final Gains kSwerveModuleSteeringMotorPIDConstants = new Gains(0.1, 0, 0);
 
-    // Joystick ports
-    public static int kRotationJoystickPort = 0;
-    public static int kDrivingJoystickPort = 1;
+  // SPARK ids
+  public static final int kFrontLeftSteerMotorSparkID = 14;
+  public static final int kFrontLeftDriveMotorSparkID = 13;
+  
+  public static final int kFrontRightSteerMotorSparkID = 2;
+  public static final int kFrontRightDriveMotorSparkID = 4;
 
-    // TEJA IS COOL
-    // TODO: Intakes, please correct these values
-    public static final int kIntakeSolenoid1ChannelID = 13;
-    public static final int kCompressorModuleID = 1;
+  public static final int kBackLeftSteerMotorSparkID = 3;
+  public static final int kBackLeftDriveMotorSparkID = 12;
+
+  public static final int kBackRightSteerMotorSparkID = 1;
+  public static final int kBackRightDriveMotorSparkID = 5;
+
+  // Joystick ports
+  public static int kRotationJoystickPort = 0;
+  public static int kDrivingJoystickPort = 1;
+
+  // TEJA IS COOL
+  // TODO: Intakes, please correct these values
+  public static final int kIntakeSolenoid1ChannelID = 13;
+  public static final int kCompressorModuleID = 1;
 }

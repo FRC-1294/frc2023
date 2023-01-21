@@ -7,16 +7,17 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Global;
+import frc.robot.InputDevice;
 import frc.robot.SwerveModule;
-import frc.robot.subsystems.Joysticks;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class PIDtuning extends CommandBase {
   SwerveSubsystem swerveee;
-  Joysticks joyseee;
-  public PIDtuning( Joysticks joys,SwerveSubsystem swerve) {
+  InputDevice inputDevice;
+
+  public PIDtuning(InputDevice inputDevice,SwerveSubsystem swerve) {
     this.swerveee = swerve;
-    this.joyseee = joys;
+    this.inputDevice = inputDevice;
     addRequirements(swerveee);
   }
 
@@ -30,9 +31,9 @@ public class PIDtuning extends CommandBase {
       Global.kP = SmartDashboard.getNumber("p", 0);
       Global.kI = SmartDashboard.getNumber("i", 0);
       Global.kD = SmartDashboard.getNumber("d", 0);
-      if (this.joyseee.getIncPID()){
+      if (this.inputDevice.getIncPID()){
         Global.tuningSetpoint+=0.1;
-      }else if(this.joyseee.getDecPID()){
+      }else if(this.inputDevice.getDecPID()){
         Global.tuningSetpoint-=0.1;
       }
       SmartDashboard.putNumber("setPointReal", Global.tuningSetpoint);

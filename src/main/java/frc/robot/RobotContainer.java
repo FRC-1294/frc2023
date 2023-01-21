@@ -15,8 +15,9 @@ import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.DefaultDriveCmd;
 import frc.robot.commands.PIDtuning;
 import frc.robot.commands.SinglePID;
-import frc.robot.subsystems.Joysticks;
+import frc.robot.subsystems.DriveInputSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.DriveInputSubsystem.InputType;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -26,19 +27,18 @@ import edu.wpi.first.wpilibj2.command.Command;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  public final Joysticks joys = new Joysticks();
-  public final SwerveSubsystem swerve = new SwerveSubsystem(joys);
-  public final DefaultDriveCmd npc = new DefaultDriveCmd(joys, swerve);
-  public final PIDtuning pud = new PIDtuning(joys,swerve);
+  
+  // public final InputDevice inputDevice = DriveInputSubsystem.selectInputDevice(InputType.XboxController);
+  
+  public final InputDevice inputDevice = DriveInputSubsystem.selectInputDevice(InputType.LogitechG3dJoystick);
+  public final SwerveSubsystem swerve = new SwerveSubsystem(inputDevice);
+  public final DefaultDriveCmd npc = new DefaultDriveCmd(inputDevice, swerve);
+  public final PIDtuning pud = new PIDtuning(inputDevice, swerve);
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
 
   public SwerveModule [] allModules = swerve.getRawModules(); 
   
-
-  //public final pnumatics pnu = new pnumatics();
-  //public final Camera cam = new Camera();
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */

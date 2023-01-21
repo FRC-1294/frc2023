@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.InputDevice;
 import frc.robot.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -70,9 +71,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private final AHRS navx = new AHRS(Port.kMXP);
   
-  private final Joysticks joystick;
+  private final InputDevice inputDevice;
 
-  public SwerveSubsystem(Joysticks joystick) {
+  public SwerveSubsystem(InputDevice inputDevice) {
 
     this.odometer = new SwerveDriveOdometry(
       Constants.kSwerveDriveKinematics, 
@@ -88,16 +89,15 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("i", 0);
     SmartDashboard.putNumber("d", 0);
 
-    this.joystick = joystick;    
+    this.inputDevice = inputDevice;    
     resetGyro();    
     resetRobotPose();
   }
 
   @Override
-  public void periodic() {
-  
+  public void periodic() {  
     odometer.update(getRotation2d(), getModuleStates());
-    if(joystick.resetGyro()){resetGyro();}
+    if(this.inputDevice.resetGyro()){resetGyro();}
   }
   public void resetGyro(){
     navx.reset();
@@ -124,12 +124,16 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public SwerveModulePosition[] getModuleStates(){
-    return(new SwerveModulePosition[]{frontLeft.getModulePos(),frontRight.getModulePos(),backLeft.getModulePos(),backRight.getModulePos()});
+    return(new SwerveModulePosition[] {
+      frontLeft.getModulePos(),
+      frontRight.getModulePos(),
+      backLeft.getModulePos(),
+      backRight.getModulePos()});
   }
   
   public void setMotors(double x, double y, double rot) {
 
-    ChassisSpeeds chassisSpeeds = joystick.getRobotOriented() ? 
+    ChassisSpeeds chassisSpeeds = this.inputDevice.getRobotOriented() ? 
       new ChassisSpeeds(x, y, rot) : 
       ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
 
