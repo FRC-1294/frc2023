@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -15,6 +16,7 @@ public class WestCoastDrive extends SubsystemBase {
   private CANSparkMax backLeftSparkMax;
   private CANSparkMax frontRightSparkMax;
   private CANSparkMax backRightSparkMax;
+   
 
   private MotorControllerGroup leftMotorGroup;
   private MotorControllerGroup rightMotorGroup;

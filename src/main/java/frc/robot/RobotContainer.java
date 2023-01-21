@@ -31,6 +31,11 @@ public class RobotContainer {
   //Drive Command
   private final DriveWithJoySticks driveCommand = new DriveWithJoySticks(joystickTrans, joystickRot, westCoastDrive);
 
+
+  //Command for Auto
+  private final 
+
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
