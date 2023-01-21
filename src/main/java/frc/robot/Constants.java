@@ -45,10 +45,11 @@ public final class Constants {
   public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*kDriveGearRation / 60;
 
   // Distance between right and left wheels
-  public static final double kTrackWidth = Units.inchesToMeters(25.5);
-  
+  // public static final double kTrackWidth = Units.inchesToMeters(25.5);
+  public static final double kTrackWidth = Units.inchesToMeters(18.5);
+
   // Distance between front and back wheels
-  public static final double kWheelBase = Units.inchesToMeters(25.5);
+  public static final double kWheelBase = Units.inchesToMeters(18.5);
 
   public static final SwerveDriveKinematics kSwerveDriveKinematics = new SwerveDriveKinematics(
     new Translation2d(Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
@@ -65,17 +66,17 @@ public final class Constants {
   public static final Gains kSwerveModuleSteeringMotorPIDConstants = new Gains(0.1, 0, 0);
 
   // SPARK ids
-  public static final int kFrontLeftSteerMotorSparkID = 14;
-  public static final int kFrontLeftDriveMotorSparkID = 13;
+  public static final int kFrontLeftDriveMotorSparkID = 2;
+  public static final int kFrontLeftSteerMotorSparkID = 3;
   
-  public static final int kFrontRightSteerMotorSparkID = 2;
   public static final int kFrontRightDriveMotorSparkID = 4;
+  public static final int kFrontRightSteerMotorSparkID = 5;
 
-  public static final int kBackLeftSteerMotorSparkID = 3;
-  public static final int kBackLeftDriveMotorSparkID = 12;
+  public static final int kBackLeftDriveMotorSparkID = 6;
+  public static final int kBackLeftSteerMotorSparkID = 7;
 
-  public static final int kBackRightSteerMotorSparkID = 1;
-  public static final int kBackRightDriveMotorSparkID = 5;
+  public static final int kBackRightDriveMotorSparkID = 8;
+  public static final int kBackRightSteerMotorSparkID = 9;
 
   // Joystick ports
   public static int kRotationJoystickPort = 0;
