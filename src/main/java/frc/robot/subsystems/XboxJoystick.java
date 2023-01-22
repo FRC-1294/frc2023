@@ -1,31 +1,31 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants;
 import frc.robot.InputDevice;
 
-public class XboxController implements InputDevice {
+public class XboxJoystick implements InputDevice {
 
-    private final Joystick driverJoytick = new Joystick(Constants.kXboxControllerPort);
+    private final XboxController xController = new XboxController(Constants.kXboxControllerPort);
     
     @Override
     public boolean resetGyro() {
-        throw new RuntimeException("Not yet implemented");
+        return xController.getRawButton(0);
     }
 
     @Override
     public double getX() {
-        return driverJoytick.getRawAxis(Constants.kXboxControllerYAxis);
+        return -xController.getRawAxis(Constants.kXboxControllerXAxis);
     }
 
     @Override
     public double getY() {
-        return driverJoytick.getRawAxis(Constants.kXboxControllerXAxis);
+        return -xController.getRawAxis(Constants.kXboxControllerYAxis);
     }
 
     @Override
     public double getRot() {
-        return driverJoytick.getRawAxis(Constants.kXboxControllerRotAxis);
+        return xController.getRawAxis(Constants.kXboxControllerRotAxis);
     }
 
     @Override
@@ -40,6 +40,6 @@ public class XboxController implements InputDevice {
 
     @Override
     public boolean getRobotOriented() {
-        return driverJoytick.getRawButton(Constants.kXboxControllerRobotOrientedButtonIdx);
+        return xController.getLeftTriggerAxis() > 0.5;
     }    
 }

@@ -25,8 +25,8 @@ public final class Constants {
   public static final int kXboxControllerPort = 0;
   public static final int kXboxControllerRobotOrientedButtonIdx = 1;
 
-  public static final int kXboxControllerYAxis = 1;
   public static final int kXboxControllerXAxis = 0;
+  public static final int kXboxControllerYAxis = 1;
   public static final int kXboxControllerRotAxis = 4;
   
   public static final double kDeadband = 0.05;  
