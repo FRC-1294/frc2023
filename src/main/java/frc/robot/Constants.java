@@ -67,21 +67,21 @@ public final class Constants {
     public static final double deadzone = 0.1;
 
     //SPARK ids
-    public static final int frontLeftSteer = 14;//
-    public static final int frontLeftDrive = 13;//
+    public static final int frontLeftSteer = 3;//
+    public static final int frontLeftDrive = 2;//
     
-    public static final int frontRightSteer = 2;//
+    public static final int frontRightSteer = 5;//
     public static final int frontRightDrive = 4;//
 
-    public static final int rearLeftSteer = 3;//
-    public static final int rearLeftDrive = 12;//
+    public static final int rearLeftSteer = 7;//
+    public static final int rearLeftDrive = 6;//
 
-    public static final int rearRightSteer = 1;//
-    public static final int rearRightDrive = 5; // 
+    public static final int rearRightSteer = 9;//
+    public static final int rearRightDrive = 8; // 
 
     
-    public static final int rightPivot = 15;
-    public static final int leftPivot = 16;
+    public static final int rightArmPivot = 15;
+    public static final int leftArmPivot = 16;
 
     
     public static final int armEncoderPort = 17;

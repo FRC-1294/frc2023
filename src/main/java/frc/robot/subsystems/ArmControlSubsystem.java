@@ -17,8 +17,8 @@ import frc.robot.Constants;
 
 public class ArmControlSubsystem extends SubsystemBase {
   
-  private final WPI_TalonFX leftPivotMotorController = new WPI_TalonFX(Constants.leftPivot);
-  private final WPI_TalonFX rightPivotMotorController = new WPI_TalonFX(Constants.rightPivot);
+  private final WPI_TalonFX leftPivotMotorController = new WPI_TalonFX(Constants.leftArmPivot);
+  private final WPI_TalonFX rightPivotMotorController = new WPI_TalonFX(Constants.rightArmPivot);
 
   private final AnalogEncoder armEncoder = new AnalogEncoder(Constants.armEncoderPort);
   
