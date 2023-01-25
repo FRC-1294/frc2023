@@ -41,7 +41,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   public void periodic() {
 
     //set currentRotation with encoders
-    currentRotation = armEncoder.get()*360%360;
+    currentRotation = armEncoder.getAbsolutePosition()*360%360;
 
     differenceInRotation = desiredRotation - currentRotation;
 
