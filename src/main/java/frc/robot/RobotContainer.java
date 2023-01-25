@@ -35,7 +35,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Joysticks joys = new Joysticks();
   public final SwerveSubsystem swerve = new SwerveSubsystem(joys);
-  public final AutoBalanceCommand npc = new AutoBalanceCommand(joys, swerve);
+  
+  public final DefaultDriveCmd npc = new DefaultDriveCmd(joys, swerve);
   public final PIDtuning pud = new PIDtuning(joys,swerve);
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
@@ -54,11 +55,12 @@ public class RobotContainer {
     moduleSelector.addOption("Back Left", allModules[2]);
     moduleSelector.addOption("Back Right", allModules[3]);
 
-    swerve.setDefaultCommand(npc);
+    //swerve.setDefaultCommand(npc);
 
-    // if (!Constants.tuningPID){swerve.setDefaultCommand(npc);}
-    // else{new SinglePID(moduleSelector.getSelected()).schedule();}
+    if (!Constants.tuningPID){swerve.setDefaultCommand(npc);}
+    else{new SinglePID(moduleSelector.getSelected()).schedule();}
     
+    //who tf spelled choose wrong 
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     configureButtonBindings();
   }
@@ -70,6 +72,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    
   }
 
 

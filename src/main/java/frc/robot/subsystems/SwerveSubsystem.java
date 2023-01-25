@@ -25,13 +25,16 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
-
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax.IdleMode;
+
+
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
+import frc.robot.commands.AutoBalanceCommand;
 
 public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
@@ -40,7 +43,8 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,0,false,true,0,false, false);
   private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,0,true,true,0,false, false); 
 
-  public SwerveDriveKinematics m_kinematics;
+
+  SwerveDriveKinematics m_kinematics;
   private ChassisSpeeds chassisSpeeds1;
   private SwerveDriveOdometry m_odometry;
   private SwerveDrivePoseEstimator m_estimator;
@@ -73,7 +77,12 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_odometry.update(getRotation2d(), getModuleStates());
+    
     if(joy.resetGyro()){resetGyro();}
+    if(joy.runAutoBalance()){
+      AutoBalanceCommand autoBalanceCommand = new AutoBalanceCommand(joy, this);
+      autoBalanceCommand.schedule();
+    }
   }
   public void resetGyro(){
     navx.reset();
@@ -87,6 +96,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public Rotation2d getRotation2d(){
     return Rotation2d.fromDegrees(getHeading());
   }
+
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.kTeleDriveMaxSpeedMetersPerSecond*10);
     SmartDashboard.putNumber("Module1ROT", desiredStates[0].angle.getRadians());
@@ -134,10 +144,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setAllPIDControllers(double p, double i, double d) {
     System.out.println(p+" "+i+" "+d);
-    frontRight.setPidController(p, i, d);
-    frontLeft.setPidController(p, i, d);
-    backRight.setPidController(p, i, d);
-    backLeft.setPidController(p, i, d);
+    frontRight.setPIDController(p, i, d);
+    frontLeft.setPIDController(p, i, d);
+    backRight.setPIDController(p, i, d);
+    backLeft.setPIDController(p, i, d);
   }
   public SwerveModule[] getRawModules(){
     return new SwerveModule[]{frontLeft,frontRight,backLeft,backRight};
@@ -149,14 +159,17 @@ public class SwerveSubsystem extends SubsystemBase {
     backLeft.stop();
     backRight.stop();
 
-    frontLeft.setMode(IdleMode.kBrake);
-    backLeft.setMode(IdleMode.kBrake);
-    backRight.setMode(IdleMode.kBrake);
-    frontRight.setMode(IdleMode.kBrake);
+
 
 
   }
 
+  public void setIdleModeForAll(IdleMode mode){
+    frontLeft.setMode(mode);
+    backLeft.setMode(mode);
+    backRight.setMode(mode);
+    frontRight.setMode(mode);
+  }
 
   public float getRoll(){
     return this.navx.getRoll();

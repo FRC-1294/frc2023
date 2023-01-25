@@ -38,6 +38,15 @@ public final class Constants {
     public static final double kDriveEncoderRot2Meter = Math.PI * Units.inchesToMeters(4);
     public static final double kDriveGearRation = 1/10;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*kDriveGearRation / 60;
+
+    //arm constants
+    public static final double minAngle = 5.0;
+    public static final double maxAngle = 115.0;
+
+    public static final double level3 = 107.414;
+    public static final double level2 = 100.976;
+    public static final double level1 = 42.0;
+
     //Encoders
     public static final double angleEncoderConversionFactor = 2*Math.PI/18;
     public static final double driveEncoderConversionFactor = 1;
@@ -70,6 +79,12 @@ public final class Constants {
     public static final int rearRightSteer = 1;//
     public static final int rearRightDrive = 5; // 
 
+    
+    public static final int rightPivot = 15;
+    public static final int leftPivot = 16;
+
+    
+    public static final int armEncoderPort = 17;
 
     public static final double kRotP = 0.005;
 

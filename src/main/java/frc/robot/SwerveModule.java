@@ -24,17 +24,17 @@ public class SwerveModule {
     private RelativeEncoder rotEncoder;
     private AnalogInput universalEncoder;
     public SparkMaxPIDController rotPID;
-    public PIDController rotationPIDTest;
-    private Boolean isAbsoluteEncoder;
+    public PIDController rotationPID;
+    private boolean isAbsoluteEncoder;
     private double universalEncoderOffset;
-    private Boolean m_transInverted;
-    private Boolean m_rotInverted;
-    private Boolean encoderInverted;
+    private boolean m_transInverted;
+    private boolean m_rotInverted;
+    private boolean encoderInverted;
     
 
     public SwerveModule(int motorTransID, int motorRotID, int universalEncoderID,
-     Boolean transInverted, Boolean rotInverted, double universalEncoderOffsetinit,
-     Boolean universalEncoderInverted, boolean isAbsEncoder){
+     boolean transInverted, boolean rotInverted, double universalEncoderOffsetinit,
+     boolean universalEncoderInverted, boolean isAbsEncoder){
         this.encoderInverted = universalEncoderInverted;
         this.isAbsoluteEncoder=isAbsEncoder;
         this.m_MotorTransID = motorTransID;
@@ -61,8 +61,8 @@ public class SwerveModule {
         
         resetEncoders();
         rotPID = rotMotor.getPIDController();
-        rotationPIDTest = new PIDController(0.1, 0, 0);
-        rotationPIDTest.enableContinuousInput(-Math.PI,Math.PI);
+        rotationPID = new PIDController(0.1, 0, 0);
+        rotationPID.enableContinuousInput(-Math.PI,Math.PI);
         
     }
     public double getTransPosition(){
@@ -81,24 +81,24 @@ public class SwerveModule {
     public double getUniversalEncoderRad(){
         if (isAbsoluteEncoder) {
             double angle = universalEncoder.getVoltage()/RobotController.getVoltage5V();
-            angle*=2.0 * Math.PI;
-            angle-= universalEncoderOffset;
+            angle *= 2.0 * Math.PI;
+            angle -= universalEncoderOffset;
             if (this.encoderInverted){
                 return angle*-1;
             }
             else{
                 return angle;
-             }
+            }
             
         }
-        return 0;
-        
+        return 0; 
     }
     public void resetEncoders(){
         transEncoder.setPosition(0);
         rotEncoder.setPosition(0);// 
 
         //hello - 8/3/22
+        //wazzup beijing- 1/21/23
     }
     public SwerveModuleState getState(){
         return new SwerveModuleState(getTransVelocity(),new Rotation2d(getRotPosition()*2*Math.PI/18));
@@ -116,20 +116,20 @@ public class SwerveModule {
         SmartDashboard.putNumber("DesiredState"+this.m_MotorRotID, desiredState.angle.getRadians());
        // if (this.m_transInverted){transMotor.set(-desiredState.speedMetersPerSecond/Constants.maxSpeed);}
         transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
-        rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactor, desiredState.angle.getRadians()));
+        rotMotor.set(rotationPID.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactor, desiredState.angle.getRadians()));
         //System.out.println("setPoint is: "+ getRotPosition());
     }
     public void updatePositions(Double setPoint){
-        rotationPIDTest.setPID(Constants.kP, Constants.kI, Constants.kD);
-        rotationPIDTest.disableContinuousInput();
-        double sp = rotationPIDTest.calculate(rotEncoder.getPosition()*2*Math.PI/18, setPoint);
+        rotationPID.setPID(Constants.kP, Constants.kI, Constants.kD);
+        rotationPID.disableContinuousInput();
+        double sp = rotationPID.calculate(rotEncoder.getPosition()*2*Math.PI/18, setPoint);
         //System.out.println(sp);
         rotMotor.set(sp);
     }
     public void returnToOrigin(){
         System.out.println("In PID loop");
-        rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*2*Math.PI/18, 0));
-        rotationPIDTest.setTolerance(0);
+        rotMotor.set(rotationPID.calculate(rotEncoder.getPosition()*2*Math.PI/18, 0));
+        rotationPID.setTolerance(0);
     }
     public SwerveModulePosition getModulePos(){
         return new SwerveModulePosition(transEncoder.getPosition()*Constants.kDriveEncoderRPM2MeterPerSec,new Rotation2d(getRotPosition()));
@@ -145,12 +145,12 @@ public class SwerveModule {
     }
 
     public PIDController getPIDController(){
-        return this.rotationPIDTest;
+        return this.rotationPID;
     }
-    public void setPidController(double p, double i, double d){
-        rotationPIDTest.setP(p);
-        rotationPIDTest.setI(i);
-        rotationPIDTest.setD(d);
+    public void setPIDController(double p, double i, double d){
+        rotationPID.setP(p);
+        rotationPID.setI(i);
+        rotationPID.setD(d);
     }
 
 

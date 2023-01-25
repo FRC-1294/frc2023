@@ -6,13 +6,10 @@ import frc.robot.Constants;
 
 /** Add your docs here. */
 public class Joysticks {
-    Joystick rJoystick;
-    public static Joystick staticRJoystick;
-    Joystick tJoystick;
+    Joystick rJoystick, tJoystick;
     public Joysticks(){
         rJoystick = new Joystick (Constants.rotJoystickPort);
         tJoystick = new Joystick (Constants.transJoystickPort);
-        staticRJoystick = new Joystick(Constants.rotJoystickPort);
     }
     public boolean resetGyro(){return rJoystick.getRawButton(3);}
     public double getX(){return tJoystick.getY();}
@@ -22,8 +19,9 @@ public class Joysticks {
     public boolean getDecPID(){return rJoystick.getRawButton(4);}
     public boolean getRobotOriented(){return tJoystick.getTrigger();}
 
-    public static boolean getResetGyro() {
-        return staticRJoystick.getRawButtonPressed(3);
-    }
+    public boolean runAutoBalance(){return tJoystick.getRawButton(3);}
+
+
+
     
 }

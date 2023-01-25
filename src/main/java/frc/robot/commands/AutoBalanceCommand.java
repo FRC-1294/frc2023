@@ -5,8 +5,11 @@
 package frc.robot.commands;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,26 +25,34 @@ public class AutoBalanceCommand extends CommandBase {
   //reseting the gyro does not reset the axis of the robot
   //which means pitch and roll will always be relative
 
-  float roll, pitch, yaw;
-  Pose2d initialPose, currentPose;
+  float roll, pitch, yaw, displacement;
+  Pose2d initialPose;
+  Transform2d displacementTransform;
+
+  Translation2d tilt;
 
   //arbritrary - fix later with dynamic speed control :)
-  double firstSpeed = .25;
+  float[] speeds = {.25f, .35f, 5f};
 
   Joysticks joyee;
   SwerveSubsystem swervee;
 
   AHRS navx;
 
+  float percentagePower;
 
   float deadzone = 2.5f;
 
   boolean isOnChargingStation = false;
 
+  
+
   //as of right now this command is not toggleable
   public AutoBalanceCommand(Joysticks joys, SwerveSubsystem swervee) {
     this.joyee = joys;
     this.swervee = swervee;
+
+    tilt = new Translation2d();
 
     addRequirements(swervee);
   }
@@ -49,17 +60,19 @@ public class AutoBalanceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
     roll = swervee.getRoll();
     pitch = swervee.getPitch();
     yaw = swervee.getYaw();
 
-  
+    this.swervee.setIdleModeForAll(IdleMode.kBrake);
   }
 
   
   @Override
   public void execute() {
+    
+    
+
     roll = swervee.getRoll();
     pitch = swervee.getPitch();
     yaw = swervee.getYaw();
@@ -67,36 +80,53 @@ public class AutoBalanceCommand extends CommandBase {
     goForwardSlowly();
 
 
-    putNumbersInDashboard();
+    putDashboard();
 
   }
 
   void goForwardSlowly(){
+    
+
+
     if(Math.abs(pitch) <= deadzone){
       //robot is stable and on the carpet ground not charge station
-      swervee.setMotors(0, firstSpeed, 0);
+      swervee.setMotors(0, speeds[0], 0);
     }
     else if(Math.abs(pitch) - 15 <= deadzone && !isOnChargingStation){
       isOnChargingStation = true;
-
+      initialPose = this.swervee.getRobotPose();
     }
 
 
     if (isOnChargingStation){
+      displacementTransform = this.swervee.getRobotPose().minus(initialPose);
+      if(Math.abs(pitch) > 15){
+        if(pitch < 0){
+          percentagePower = -1;
+        }else if(pitch > 0){
+          percentagePower = 1;
+        }
+      }else{
+        percentagePower = pitch / 15;
+      }
+
       if(Math.abs(pitch) > 2.5){
-        swervee.setMotors(0, firstSpeed, 0);
+        swervee.setMotors(0, percentagePower * speeds[0], 0);
       }else{
         //we dont
         swervee.stopAllAndBrake();
       }
     }
 
+
+
   }
 
-  void putNumbersInDashboard(){
+  void putDashboard(){
     SmartDashboard.putNumber("Roll", roll);
     SmartDashboard.putNumber("Pitch", pitch);
     SmartDashboard.putNumber("Yaw", yaw);
+    SmartDashboard.putBoolean("IsOnDashboard", isOnChargingStation);
   }
 
   
