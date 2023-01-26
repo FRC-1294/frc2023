@@ -79,8 +79,11 @@ public final class Constants {
 
     //arm stuff
     
+    public static final double pivotPosInMetersY = 4;
+
     public static final int rightArmPivot = 15;
     public static final int leftArmPivot = 16;
+    public static final int telescopicArmSpark = 17;
 
     public static final int armPivotEncoderPort = 17;
 

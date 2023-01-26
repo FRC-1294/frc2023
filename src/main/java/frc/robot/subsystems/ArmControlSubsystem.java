@@ -5,7 +5,12 @@
 
 package frc.robot.subsystems;
 
+import org.opencv.ml.ANN_MLP;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -20,13 +25,17 @@ public class ArmControlSubsystem extends SubsystemBase {
   private final WPI_TalonFX leftPivotMotorController = new WPI_TalonFX(Constants.leftArmPivot);
   private final WPI_TalonFX rightPivotMotorController = new WPI_TalonFX(Constants.rightArmPivot);
 
-  private final AnalogEncoder armPivotEncoder = new AnalogEncoder(Constants.armPivotEncoderPort);
+  private final CANSparkMax telescopicSpark = new CANSparkMax(Constants.telescopicArmSpark, MotorType.kBrushless);
+
+  private final AnalogEncoder pivotEncoder = new AnalogEncoder(Constants.armPivotEncoderPort);
+  private final RelativeEncoder telescopicEncoder = telescopicSpark.getEncoder();
   
   double[] setRotations = {90};
-  double currentRotation = Constants.minAngle;
-  double desiredRotation = currentRotation;
+  double currentPivotRotation = Constants.minAngle;
+  double desiredPivotRotation = currentPivotRotation;
+  
 
-  double differenceInRotation = desiredRotation - currentRotation;
+  double differenceInRotation = desiredPivotRotation - currentPivotRotation;
   PIDController pivotPID = new PIDController(0.1, 0, 0);
    
   final double setSpeed = .90;
@@ -46,9 +55,9 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   void pivotPeriodic(){
     //set currentRotation with encoders
-    currentRotation = armPivotEncoder.getAbsolutePosition()*360%360;
+    currentPivotRotation = pivotEncoder.getAbsolutePosition()*360%360;
 
-    differenceInRotation = desiredRotation - currentRotation;
+    differenceInRotation = desiredPivotRotation - currentPivotRotation;
 
     //do correction
     // if (Math.abs(differenceInRotation) > 7.5){
@@ -66,7 +75,22 @@ public class ArmControlSubsystem extends SubsystemBase {
     }
   }
 
-  public void setDesiredRotation(double _desiredRotation){
-    desiredRotation = _desiredRotation;
+  public void setDesiredPivotRotation(double _desiredRotation){
+    desiredPivotRotation = _desiredRotation;
   }
+
+  public void setDesiredExtension(double _extension){
+
+  }
+
+  //these functions assume the camera is on the front of the drivebase 
+  double getDistanceFromPivotToPose(double distanceFromCamera){
+    return Math.sqrt(Math.pow(distanceFromCamera, 2) + Math.pow(Constants.pivotPosInMetersY, 2));
+  }
+
+  double getDesiredPivotAngle(double distanceFromCamera){
+    return Math.atan(distanceFromCamera / Constants.pivotPosInMetersY);
+  }
+
+  
 }

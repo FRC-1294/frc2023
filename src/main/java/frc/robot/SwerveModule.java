@@ -65,19 +65,24 @@ public class SwerveModule {
         rotationPID.enableContinuousInput(-Math.PI,Math.PI);
         
     }
+    
     public double getTransPosition(){
         return transEncoder.getPosition(); 
     }
+
     public double getRotPosition(){
         return rotEncoder.getPosition();
     
     }
+
     public double getTransVelocity(){
         return transEncoder.getVelocity();
     }
+
     public double getRotVelocity(){
         return rotEncoder.getVelocity();
     }
+
     public double getUniversalEncoderRad(){
         if (isAbsoluteEncoder) {
             double angle = universalEncoder.getVoltage()/RobotController.getVoltage5V();
@@ -93,6 +98,7 @@ public class SwerveModule {
         }
         return 0; 
     }
+
     public void resetEncoders(){
         transEncoder.setPosition(0);
         rotEncoder.setPosition(0);// 
@@ -100,9 +106,11 @@ public class SwerveModule {
         //hello - 8/3/22
         //wazzup beijing- 1/21/23
     }
+
     public SwerveModuleState getState(){
-        return new SwerveModuleState(getTransVelocity(),new Rotation2d(getRotPosition()*2*Math.PI/18));
+        return new SwerveModuleState(getTransVelocity(), new Rotation2d(getRotPosition()*2*Math.PI/18));
     }
+
     public void setDesiredState(SwerveModuleState desiredState){
         
         if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) 
@@ -119,6 +127,7 @@ public class SwerveModule {
         rotMotor.set(rotationPID.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactor, desiredState.angle.getRadians()));
         //System.out.println("setPoint is: "+ getRotPosition());
     }
+
     public void updatePositions(Double setPoint){
         rotationPID.setPID(Constants.kP, Constants.kI, Constants.kD);
         rotationPID.disableContinuousInput();
@@ -126,18 +135,20 @@ public class SwerveModule {
         //System.out.println(sp);
         rotMotor.set(sp);
     }
+
     public void returnToOrigin(){
         System.out.println("In PID loop");
         rotMotor.set(rotationPID.calculate(rotEncoder.getPosition()*2*Math.PI/18, 0));
         rotationPID.setTolerance(0);
     }
+
     public SwerveModulePosition getModulePos(){
         return new SwerveModulePosition(transEncoder.getPosition()*Constants.kDriveEncoderRPM2MeterPerSec,new Rotation2d(getRotPosition()));
     }
+
     public void stop() {
         transMotor.set(0);
         rotMotor.set(0);
-
     }
 
     public void setMode(IdleMode mode){

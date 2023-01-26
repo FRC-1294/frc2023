@@ -71,8 +71,6 @@ public class AutoBalanceCommand extends CommandBase {
   @Override
   public void execute() {
     
-    
-
     roll = swervee.getRoll();
     pitch = swervee.getPitch();
     yaw = swervee.getYaw();
@@ -86,9 +84,7 @@ public class AutoBalanceCommand extends CommandBase {
 
   void goForwardSlowly(){
     
-
-
-    if(Math.abs(pitch) <= deadzone){
+    if(Math.abs(pitch) <= deadzone && isOnChargingStation){
       //robot is stable and on the carpet ground not charge station
       swervee.setMotors(0, speeds[0], 0);
     }
