@@ -1,6 +1,10 @@
 name: FRC PR
 
-on: [push]
+on:
+  pull_request:
+    branches:    
+      - master
+      - 'Swerve-Branch'
 
 jobs:
   build:
