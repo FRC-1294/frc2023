@@ -1,9 +1,6 @@
 name: FRC PR
 
-on:
-  push:
-    paths:
-      - '**.java'
+on: [push]
 
 jobs:
   build:
