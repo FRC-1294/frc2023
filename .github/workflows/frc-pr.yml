@@ -17,7 +17,7 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Make gradlew executable
+    - name: Make gradlew executable # Todo Team needs to look at executability -> 'chmod' this since its Unix only!
       run: chmod +x ./gradlew
 
     - name: Build with Gradle
