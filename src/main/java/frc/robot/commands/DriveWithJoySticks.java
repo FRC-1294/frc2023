@@ -11,15 +11,15 @@ import frc.robot.subsystems.WestCoastDrive;
 
 public class DriveWithJoySticks extends CommandBase {
 
-  private CommandJoystick transJoyStick;
-  private CommandJoystick rotJoyStick;
+  private CommandJoystick leftJoyStick;
+  private CommandJoystick rightJoyStick;
   private WestCoastDrive westCoastDrive;
 
 
   /** Creates a new DriveWithJoySticks. */
-  public DriveWithJoySticks(CommandJoystick tJoystick, CommandJoystick rJoystick, WestCoastDrive wCoastDrive) {
-    transJoyStick = tJoystick;
-    rotJoyStick = rJoystick;
+  public DriveWithJoySticks(CommandJoystick lJoystick, CommandJoystick rJoystick, WestCoastDrive wCoastDrive) {
+    leftJoyStick = lJoystick;
+    rightJoyStick = rJoystick;
     westCoastDrive = wCoastDrive;
     addRequirements(westCoastDrive);
     
@@ -32,7 +32,7 @@ public class DriveWithJoySticks extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    westCoastDrive.drive(rotJoyStick.getX()/1.5,transJoyStick.getY());
+    westCoastDrive.drive(leftJoyStick.getY(),rightJoyStick.getY());
   }
 
   // Called once the command ends or is interrupted.
