@@ -1,6 +1,7 @@
 package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogEncoder;
@@ -23,7 +24,7 @@ public class SwerveModule {
     private final CANSparkMax rotMotor;
     private final RelativeEncoder rotEncoder;
     
-    private final PIDController rotationPIDController;    
+    private final PIDController rotationPIDController;
         
     private final String swerveModuleInfo;
     

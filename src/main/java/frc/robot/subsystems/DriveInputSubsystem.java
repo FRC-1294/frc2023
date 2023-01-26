@@ -10,7 +10,7 @@ public class DriveInputSubsystem {
     
     public static InputDevice selectInputDevice(InputType type) {
         if (type == InputType.XboxController) {
-            return new XboxController();
+            return new XboxJoystick();
         } else {
             return new Joysticks();
         }
