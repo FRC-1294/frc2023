@@ -25,15 +25,15 @@ public class RobotContainer {
   private final WestCoastDrive westCoastDrive = new WestCoastDrive();
 
   // Controllers - One joystick for the Translation and Rotation 
-  private final CommandJoystick joystickTrans = new CommandJoystick(OperatorConstants.TRANS_JOYSTICK_PORT);
-  private final CommandJoystick joystickRot = new CommandJoystick(OperatorConstants.ROT_JOYSTICK_PORT);
+  private final CommandJoystick leftJoystick = new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT);
+  private final CommandJoystick rightJoystick = new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT);
 
   //Drive Command
-  private final DriveWithJoySticks driveCommand = new DriveWithJoySticks(joystickTrans, joystickRot, westCoastDrive);
+  private final DriveWithJoySticks driveCommand = new DriveWithJoySticks(leftJoystick, rightJoystick, westCoastDrive);
 
 
   //Command for Auto
-  private final 
+  //private final Command autoCommand = new AutoDriveAndBack();
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
