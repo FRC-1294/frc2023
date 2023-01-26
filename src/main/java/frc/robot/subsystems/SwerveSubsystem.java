@@ -44,7 +44,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,0,true,true,0,false, false); 
 
 
-  SwerveDriveKinematics m_kinematics;
+  public SwerveDriveKinematics m_kinematics;
   private ChassisSpeeds chassisSpeeds1;
   private SwerveDriveOdometry m_odometry;
   private SwerveDrivePoseEstimator m_estimator;

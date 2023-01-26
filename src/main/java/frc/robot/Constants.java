@@ -21,35 +21,32 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
     //SWERVE constants
-    public static final double swerveModuleXDistance = 0.381;
-    public static final double swerveModuleYDistance = 0.381;
 
     public static final double maxSpeed = 12.0;
-    public static final double wheelBaseX = 8;
-    public static final double wheelBaseY = 9;
+    
+    public static final double rad2Deg = 180/Math.PI;
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5; //40
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
-    public static final double kTicksPerRotation = 42;
     public static final double kTeleDriveMaxSpeedMetersPerSecond = 1;
-    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
-            kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
+    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 4;
     public static final double kDriveEncoderRot2Meter = Math.PI * Units.inchesToMeters(4);
     public static final double kDriveGearRation = 1/10;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*kDriveGearRation / 60;
 
+    //Encoders
+    public static final double angleEncoderConversionFactor = 2*Math.PI/18;
+    public static final double driveEncoderConversionFactor = 1;
+
     //arm constants
     public static final double minAngle = 5.0;
     public static final double maxAngle = 115.0;
 
-    public static final double level3 = 107.414;
-    public static final double level2 = 100.976;
-    public static final double level1 = 42.0;
+    public static final double[] angleLevels = {42.0, 100.976, 107.414};
 
-    //Encoders
-    public static final double angleEncoderConversionFactor = 2*Math.PI/18;
-    public static final double driveEncoderConversionFactor = 1;
+
+
 
     //PID
     public static final Gains anglePID = new Gains(0.005, 0, 0, 0.0, 0.0, -0.5, 0.5, 0);
@@ -79,12 +76,18 @@ public final class Constants {
     public static final int rearRightSteer = 9;//
     public static final int rearRightDrive = 8; // 
 
+
+    //arm stuff
     
     public static final int rightArmPivot = 15;
     public static final int leftArmPivot = 16;
 
-    
-    public static final int armEncoderPort = 17;
+    public static final int armPivotEncoderPort = 17;
+
+
+    //used for offset because the absolute encoder will likely not be at zero in the initial rotation of the arm
+    public static final double armPivotDegreesAtRest = 0.0;
+
 
     public static final double kRotP = 0.005;
 

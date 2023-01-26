@@ -20,18 +20,18 @@ public class ArmControlSubsystem extends SubsystemBase {
   private final WPI_TalonFX leftPivotMotorController = new WPI_TalonFX(Constants.leftArmPivot);
   private final WPI_TalonFX rightPivotMotorController = new WPI_TalonFX(Constants.rightArmPivot);
 
-  private final AnalogEncoder armEncoder = new AnalogEncoder(Constants.armEncoderPort);
+  private final AnalogEncoder armPivotEncoder = new AnalogEncoder(Constants.armPivotEncoderPort);
   
   double[] setRotations = {90};
   double currentRotation = Constants.minAngle;
   double desiredRotation = currentRotation;
 
   double differenceInRotation = desiredRotation - currentRotation;
-  PIDController mainPID = new PIDController(0.1, 0, 0);
+  PIDController pivotPID = new PIDController(0.1, 0, 0);
    
   final double setSpeed = .90;
 
-  double output = 0;
+  double pivotPIDOutput = 0;
 
   public ArmControlSubsystem(Joysticks joys) {
     
@@ -40,8 +40,13 @@ public class ArmControlSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
+    pivotPeriodic();
+
+  }
+
+  void pivotPeriodic(){
     //set currentRotation with encoders
-    currentRotation = armEncoder.getAbsolutePosition()*360%360;
+    currentRotation = armPivotEncoder.getAbsolutePosition()*360%360;
 
     differenceInRotation = desiredRotation - currentRotation;
 
@@ -53,13 +58,12 @@ public class ArmControlSubsystem extends SubsystemBase {
     //   leftPivotMotorController.set(setSpeed);
     // }
 
-    output = mainPID.calculate(differenceInRotation, 0);
+    pivotPIDOutput = pivotPID.calculate(differenceInRotation, 0);
     
     if(Math.abs(differenceInRotation) > 2){
-      leftPivotMotorController.set(output);
-      rightPivotMotorController.set(-output);
+      leftPivotMotorController.set(pivotPIDOutput);
+      rightPivotMotorController.set(-pivotPIDOutput);
     }
-
   }
 
   public void setDesiredRotation(double _desiredRotation){
