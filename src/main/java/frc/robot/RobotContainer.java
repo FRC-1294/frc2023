@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AutonTrajectory;
 import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.DefaultDriveCmd;
 import frc.robot.commands.PIDtuning;
@@ -31,6 +32,8 @@ public class RobotContainer {
   public final SwerveSubsystem swerve = new SwerveSubsystem(joys);
   public final DefaultDriveCmd npc = new DefaultDriveCmd(joys, swerve);
   public final PIDtuning pud = new PIDtuning(joys,swerve);
+
+  public final AutonTrajectory trajectory = new AutonTrajectory(swerve);
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
   public SwerveModule [] allModules = swerve.getRawModules(); 
@@ -75,6 +78,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new AutonomousDrive(swerve);//m_autoCommand;
+    return new AutonTrajectory(swerve);//m_autoCommand;
   }
 }
