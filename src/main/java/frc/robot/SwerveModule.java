@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -128,7 +129,9 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
        // if (this.m_transInverted){transMotor.set(-desiredState.speedMetersPerSecond/Constants.maxSpeed);}
-        transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
+        transMotor.set(MathUtil.clamp(transController.calculate(transEncoder.getVelocity()*Constants.driveEncoderConversionFactor, desiredState.speedMetersPerSecond),-Constants.maxSpeed,Constants.maxSpeed)/Constants.maxSpeed);
+        transMotor.getBusVoltage();
+        //transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
         rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactor, desiredState.angle.getRadians()));
         //System.out.println("setPoint is: "+ getRotPosition());
     }
@@ -144,6 +147,7 @@ public class SwerveModule {
         rotMotor.set(rotationPIDTest.calculate(getRotPosition()*2*Math.PI/18, 0));
         rotationPIDTest.setTolerance(0);
     }
+    
     public SwerveModulePosition getModulePos(){
         return new SwerveModulePosition(transEncoder.getPosition()*Constants.kDriveEncoderRPM2MeterPerSec,new Rotation2d(getRotPosition()));
     }

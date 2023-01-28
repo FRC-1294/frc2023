@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj.SPI.Port;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -30,10 +32,10 @@ import frc.robot.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
-  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,1,false, true,Constants.flPID);
-  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.805,false, true,Constants.frPID);
-  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,true,true,0.156,false, true,Constants.blPID);
-  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.801,false, true, Constants.brPID); 
+  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,1,false, true,Constants.flPID,Constants.flPIDTrans);
+  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.805,false, true,Constants.frPID,Constants.frPIDTrans);
+  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,true,true,0.156,false, true,Constants.blPID,Constants.flPIDTrans);
+  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.801,false, true, Constants.brPID,Constants.brPIDTrans); 
   private final PIDController headingController;
   private SimpleMotorFeedforward feedforwardController = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
 
@@ -51,7 +53,6 @@ public class SwerveSubsystem extends SubsystemBase {
       new Translation2d(-Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
       new Translation2d(-Constants.kWheelBase / 2, Constants.kTrackWidth / 2));
     m_odometry = new SwerveDriveOdometry(m_kinematics, getRotation2d(), this.getModuleStates());
-    //m_estimator = new SwerveDrivePoseEstimator(gyroAngle, initialPoseMeters, kinematics, stateStdDevs, localMeasurementStdDevs, visionMeasurementStdDevs)
     SmartDashboard.putNumber("p", 0);
     SmartDashboard.putNumber("i", 0);
     SmartDashboard.putNumber("d", 0);
@@ -87,7 +88,7 @@ public class SwerveSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(getHeading());
   }
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.kTeleDriveMaxSpeedMetersPerSecond*10);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.maxSpeed);
     SmartDashboard.putNumber("Module1ROT", desiredStates[0].angle.getRadians());
     SmartDashboard.putNumber("Module2ROT", desiredStates[1].angle.getRadians());
     SmartDashboard.putNumber("Module3ROT", desiredStates[2].angle.getRadians());
@@ -101,9 +102,7 @@ public class SwerveSubsystem extends SubsystemBase {
     return(new SwerveModulePosition[]{frontLeft.getModulePos(),frontRight.getModulePos(),backLeft.getModulePos(),backRight.getModulePos()});
   }
   public void setMotors(double x,double y, double rot){
-
     rot = headingController.calculate(navx.getRate(), rot);
-
     if (!joy.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
@@ -119,6 +118,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Heading", getHeading());
   }
 
+  /* 
   public void doFeedforwardAllMotors(double distanceMeters) {
     frontLeft.transController.setSetpoint(distanceMeters);
     double voltage = feedforwardController.calculate(5);
@@ -133,6 +133,7 @@ public class SwerveSubsystem extends SubsystemBase {
       backRight.transMotor.setVoltage(0);
     }
   }
+  */
 
   public void resetRobotPose(){
     m_odometry.resetPosition(getRotation2d(), getModuleStates(), getRobotPose());
