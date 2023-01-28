@@ -76,7 +76,7 @@ public class SwerveModule {
         return transEncoder.getPosition(); 
     }
 
-
+    /*
     public void doFeedforward(double distanceMeters) {
         transController.setSetpoint(distanceMeters);
         double voltage = feedforwardController.calculate(5);
@@ -86,6 +86,7 @@ public class SwerveModule {
         }
 
     }
+    */
 
     public double getRotPosition(){
         if (isAbsoluteEncoder){
@@ -129,8 +130,8 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
        // if (this.m_transInverted){transMotor.set(-desiredState.speedMetersPerSecond/Constants.maxSpeed);}
-        transMotor.set(MathUtil.clamp(transController.calculate(transEncoder.getVelocity()*Constants.driveEncoderConversionFactor, desiredState.speedMetersPerSecond),-Constants.maxSpeed,Constants.maxSpeed)/Constants.maxSpeed);
-        transMotor.getBusVoltage();
+        transMotor.set(MathUtil.clamp(transController.calculate(transEncoder.getVelocity()*Constants.driveEncoderConversionFactor, desiredState.speedMetersPerSecond)+(feedforwardController.calculate(desiredState.speedMetersPerSecond)/Constants.kMaxVolts)
+        ,-Constants.maxSpeed,Constants.maxSpeed)/Constants.maxSpeed);
         //transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
         rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactor, desiredState.angle.getRadians()));
         //System.out.println("setPoint is: "+ getRotPosition());
