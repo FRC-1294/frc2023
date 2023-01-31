@@ -14,6 +14,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
+
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class SwerveModule {
@@ -26,7 +28,7 @@ public class SwerveModule {
     private RelativeEncoder transEncoder;
     private RelativeEncoder rotEncoder;
     public AnalogEncoder universalEncoder;
-    public SparkMaxPIDController rotPID;
+    public SparkMaxPIDController transPIDController;
     public PIDController rotationPIDTest;
     public PIDController transController = new PIDController(Constants.kP, Constants.kI, Constants.kD);
     private Boolean isAbsoluteEncoder;
@@ -66,6 +68,8 @@ public class SwerveModule {
 
         transEncoder = transMotor.getEncoder();
         rotEncoder = rotMotor.getEncoder();
+
+        transPIDController = transMotor.getPIDController();
         rotationPIDTest = pidController;
         rotationPIDTest.enableContinuousInput(-Math.PI,Math.PI);       
         resetEncoders(); 
@@ -130,8 +134,9 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
        // if (this.m_transInverted){transMotor.set(-desiredState.speedMetersPerSecond/Constants.maxSpeed);}
-        transMotor.set(MathUtil.clamp(transController.calculate(transEncoder.getVelocity()*Constants.driveEncoderConversionFactor, desiredState.speedMetersPerSecond)+(feedforwardController.calculate(desiredState.speedMetersPerSecond)/Constants.kMaxVolts)
-        ,-Constants.maxSpeed,Constants.maxSpeed)/Constants.maxSpeed);
+        transPIDController.setReference(desiredState.speedMetersPerSecond, ControlType.kVelocity);
+        //transMotor.set(MathUtil.clamp(transController.calculate(transEncoder.getVelocity()*Constants.driveEncoderConversionFactor, desiredState.speedMetersPerSecond)+(feedforwardController.calculate(desiredState.speedMetersPerSecond)/Constants.kMaxVolts)
+        //,-Constants.maxSpeed,Constants.maxSpeed)/Constants.maxSpeed);
         //transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
         rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactor, desiredState.angle.getRadians()));
         //System.out.println("setPoint is: "+ getRotPosition());
