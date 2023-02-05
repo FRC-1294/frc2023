@@ -14,7 +14,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Joysticks;
+import frc.robot.subsystems.Input;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoBalanceCommand extends CommandBase {
@@ -34,7 +34,7 @@ public class AutoBalanceCommand extends CommandBase {
   //arbritrary - fix later with dynamic speed control :)
   float[] speeds = {.25f, .35f, 5f};
 
-  Joysticks joyee;
+  Input joyee;
   SwerveSubsystem swervee;
 
   AHRS navx;
@@ -48,8 +48,7 @@ public class AutoBalanceCommand extends CommandBase {
   
 
   //as of right now this command is not toggleable
-  public AutoBalanceCommand(Joysticks joys, SwerveSubsystem swervee) {
-    this.joyee = joys;
+  public AutoBalanceCommand(SwerveSubsystem swervee) {
     this.swervee = swervee;
 
     tilt = new Translation2d();

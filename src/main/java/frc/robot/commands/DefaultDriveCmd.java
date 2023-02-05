@@ -13,19 +13,17 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
-import frc.robot.subsystems.Joysticks;
+import frc.robot.subsystems.Input;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class DefaultDriveCmd extends CommandBase {
   /** Creates a new DefaultDriveCmd. */
   SwerveSubsystem swerveee;
-  Joysticks joyee;
   private SlewRateLimiter xLimiter;
   private SlewRateLimiter yLimiter;
   private SlewRateLimiter turningLimiter;
-  public DefaultDriveCmd(Joysticks joys, SwerveSubsystem swerve) {
+  public DefaultDriveCmd(SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.joyee = joys;
     this.swerveee = swerve;
     xLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAccelerationUnitsPerSecond*10);
     yLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAccelerationUnitsPerSecond*10);
@@ -41,9 +39,9 @@ public class DefaultDriveCmd extends CommandBase {
   @Override
   public void execute() {
 
-    double x= this.joyee.getX();
-    double y = this.joyee.getY();
-    double rot = this.joyee.getRot();
+    double x = Input.getJoystickX();
+    double y = Input.getJoystickY();
+    double rot = Input.getRot();
   
     x = Math.abs(x) > 0.15 ? x : 0.0;
     y = Math.abs(y) > 0.15 ? y : 0.0;

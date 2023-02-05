@@ -12,85 +12,117 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Util;
 
 public class ArmControlSubsystem extends SubsystemBase {
   
-  private final WPI_TalonFX leftPivotMotorController = new WPI_TalonFX(Constants.leftArmPivot);
-  private final WPI_TalonFX rightPivotMotorController = new WPI_TalonFX(Constants.rightArmPivot);
-
-  private final CANSparkMax telescopicSpark = new CANSparkMax(Constants.telescopicArmSpark, MotorType.kBrushless);
-
+  private final WPI_TalonFX leftPivotController = new WPI_TalonFX(Constants.leftArmPivot);
+  private final WPI_TalonFX rightPivotController = new WPI_TalonFX(Constants.rightArmPivot);
   private final AnalogEncoder pivotEncoder = new AnalogEncoder(Constants.armPivotEncoderPort);
-  private final RelativeEncoder telescopicEncoder = telescopicSpark.getEncoder();
+
+  private final CANSparkMax extensionController = new CANSparkMax(Constants.telescopicArmSpark, MotorType.kBrushless);
+  private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
   
-  double[] setRotations = {90};
+
   double currentPivotRotation = Constants.minAngle;
   double desiredPivotRotation = currentPivotRotation;
+
+  double currentExtensionDistance = Constants.minExtension;
+  double desiredExtensionDistance = currentExtensionDistance;
+
+  //TODO moves these to constants
+  PIDController pivotPID; //TODO calculate gains to actually change the angle
+  ArmFeedforward pivotFeedforward; //TODO calculate gains to beat the force of gravity 
+
+  PIDController extensionPID;
   
+  //TODO make the constructor more useful and modular by passing in most values from constants
+  public ArmControlSubsystem() {
+    pivotPID = new PIDController(0.1, 0, 0); //TODO calculate gains to actually change the angle
+    pivotFeedforward = new ArmFeedforward(0, 0, 0, 0); //TODO calculate gains to beat the force of gravity 
 
-  double differenceInRotation = desiredPivotRotation - currentPivotRotation;
-  PIDController pivotPID = new PIDController(0.1, 0, 0);
-   
-  final double setSpeed = .90;
-
-  double pivotPIDOutput = 0;
-
-  public ArmControlSubsystem(Joysticks joys) {
-    
+    extensionPID = new PIDController(0.1, 0, 0);
   }
 
   @Override
   public void periodic() {
-
-    pivotPeriodic();
-
+      pivotPeriodic(); //maintains the desired pivot angle
+      extensionPeriodic(); //maintains the desired extension length
   }
 
-  void pivotPeriodic(){
+  private void pivotPeriodic(){
+    desiredPivotRotation = Util.clamp(desiredPivotRotation, Constants.minAngle, Constants.maxAngle);
+
     //set currentRotation with encoders
-    currentPivotRotation = pivotEncoder.getAbsolutePosition()*360%360;
+    currentPivotRotation = getCurrentPivotRotation(true);
 
-    differenceInRotation = desiredPivotRotation - currentPivotRotation;
-
-    //do correction
-    // if (Math.abs(differenceInRotation) > 7.5){
-    //   leftPivotMotorController.set(setSpeed);
-    //   rightPivotMotorController.set(setSpeed);
-    // }else if (Math.abs(differenceInRotation) > 2){
-    //   leftPivotMotorController.set(setSpeed);
-    // }
-
-    pivotPIDOutput = pivotPID.calculate(differenceInRotation, 0);
+    double pivotFeedforwardOutput = pivotFeedforward.calculate(desiredPivotRotation, 1, 1); //arbitrary
+    double pivotPIDOutput = pivotPID.calculate(currentPivotRotation, desiredPivotRotation); 
     
-    if(Math.abs(differenceInRotation) > 2){
-      leftPivotMotorController.set(pivotPIDOutput);
-      rightPivotMotorController.set(-pivotPIDOutput);
-    }
+    
+    //TODO we dont know which one is inverted yet
+    leftPivotController.set(pivotPIDOutput + (pivotFeedforwardOutput / RobotController.getBatteryVoltage())); 
+    rightPivotController.set(-pivotPIDOutput + (-pivotFeedforwardOutput / RobotController.getBatteryVoltage()));
   }
+
+  private void extensionPeriodic(){
+    desiredExtensionDistance = Util.clamp(desiredExtensionDistance, Constants.minExtension, Constants.maxExtension);
+
+    currentExtensionDistance = getCurrentExtension();
+
+    double extensionPIDOutput = extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
+
+    extensionController.set(extensionPIDOutput);
+  }
+
 
   public void setDesiredPivotRotation(double _desiredRotation){
     desiredPivotRotation = _desiredRotation;
   }
 
+  //in inches
   public void setDesiredExtension(double _extension){
-
+    desiredExtensionDistance = _extension;
   }
 
   //these functions assume the camera is on the front of the drivebase 
-  double getDistanceFromPivotToPose(double distanceFromCamera){
+  public double getDistanceFromPivotToPose(double distanceFromCamera){
     return Math.sqrt(Math.pow(distanceFromCamera, 2) + Math.pow(Constants.pivotPosInMetersY, 2));
   }
 
-  double getDesiredPivotAngle(double distanceFromCamera){
-    return Math.atan(distanceFromCamera / Constants.pivotPosInMetersY);
+  public double getDesiredPivotAngle(double distanceFromCamera){
+    return Math.atan(distanceFromCamera / Constants.pivotPosInMetersY); //in radians
   }
 
+
+  public double getCurrentPivotRotation(boolean inRadians){
+    double rotation = pivotEncoder.getAbsolutePosition() - Constants.pivotInitOffset;
+    if(inRadians)
+      return rotation * Math.PI * 2;
+    return rotation;
+  }
+
+  //convert encoder rotations to distance inches
+  public double getCurrentExtension(){
+    return extensionEncoder.getPosition()*Constants.extensionEncoderToLength + Constants.minExtension;
+  }
   
+  public void changeDesiredPivotRotation(double i){
+    this.desiredPivotRotation += i;
+  }
+
+
+
+
+
 }

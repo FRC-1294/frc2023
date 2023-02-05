@@ -49,10 +49,9 @@ public class SwerveSubsystem extends SubsystemBase {
   private SwerveDriveOdometry m_odometry;
   private SwerveDrivePoseEstimator m_estimator;
   public AHRS navx = new AHRS(Port.kMXP);
-  private Joysticks joy;
   SwerveModule [] rawMods;
 
-  public SwerveSubsystem(Joysticks joys) {
+  public SwerveSubsystem(Input joys) {
     m_kinematics = new SwerveDriveKinematics(
       new Translation2d(Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
       new Translation2d(Constants.kWheelBase / 2, Constants.kTrackWidth / 2),
@@ -67,7 +66,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("p", 0);
     SmartDashboard.putNumber("i", 0);
     SmartDashboard.putNumber("d", 0);
-    this.joy = joys;
+
     resetGyro();
     resetRobotPose();
     rawMods = getRawModules();
@@ -78,9 +77,9 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     m_odometry.update(getRotation2d(), getModuleStates());
     
-    if(joy.resetGyro()){resetGyro();}
-    if(joy.runAutoBalance()){
-      AutoBalanceCommand autoBalanceCommand = new AutoBalanceCommand(joy, this);
+    if(Input.resetGyro()){resetGyro();}
+    if(Input.runAutoBalance()){
+      AutoBalanceCommand autoBalanceCommand = new AutoBalanceCommand(this);
       autoBalanceCommand.schedule();
     }
   }
@@ -112,7 +111,7 @@ public class SwerveSubsystem extends SubsystemBase {
     return(new SwerveModulePosition[]{frontLeft.getModulePos(),frontRight.getModulePos(),backLeft.getModulePos(),backRight.getModulePos()});
   }
   public void setMotors(double x,double y, double rot){
-    if (!joy.getRobotOriented()){
+    if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);

@@ -32,18 +32,14 @@ public final class Constants {
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 4;
     public static final double kDriveEncoderRot2Meter = Math.PI * Units.inchesToMeters(4);
-    public static final double kDriveGearRation = 1/10;
+    public static final double kDriveGearRation = 1.0/10.0;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*kDriveGearRation / 60;
 
     //Encoders
     public static final double angleEncoderConversionFactor = 2*Math.PI/18;
     public static final double driveEncoderConversionFactor = 1;
 
-    //arm constants
-    public static final double minAngle = 5.0;
-    public static final double maxAngle = 115.0;
 
-    public static final double[] angleLevels = {42.0, 100.976, 107.414};
 
 
 
@@ -58,8 +54,8 @@ public final class Constants {
     public static double tuningSetpoint = 0;
     // Distance between right and left wheels
     public static final double kWheelBase = Units.inchesToMeters(25.5);
-    public static final Boolean tuningPID = true;
-    public static final Boolean fieldOriented = true;
+    public static final boolean tuningPID = true;
+    public static final boolean fieldOriented = true;
     //JOYSTICK constants
     public static final double deadzone = 0.1;
 
@@ -78,7 +74,17 @@ public final class Constants {
 
 
     //arm stuff
-    
+    public static final double pivotInitOffset = .5; //arbitrary. what the abs encoder returns when the arm is parallel to ground
+    public static final double minAngle = Units.degreesToRadians(5.0) - Units.rotationsToRadians(pivotInitOffset) - Units.degreesToRadians(90);
+    public static final double maxAngle = Units.degreesToRadians(115.0) - Units.rotationsToRadians(pivotInitOffset) - Units.degreesToRadians(90);
+    public static final double[] angleLevels = {42.0-90, 100.976-90, 107.414-90}; //degrees
+
+    public static final double extensionEncoderToLength = 1.0/10;
+    public static final double minExtension = 30; //basically the length of the first base //inches
+    public static final double maxExtension = 60;
+    public static final double[] extensionLevels = {36, 41, 60}; //inches
+
+
     public static final double pivotPosInMetersY = 4;
 
     public static final int rightArmPivot = 15;
@@ -86,10 +92,6 @@ public final class Constants {
     public static final int telescopicArmSpark = 17;
 
     public static final int armPivotEncoderPort = 17;
-
-
-    //used for offset because the absolute encoder will likely not be at zero in the initial rotation of the arm
-    public static final double armPivotDegreesAtRest = 0.0;
 
 
     public static final double kRotP = 0.005;
