@@ -17,9 +17,17 @@ public class LimelightAlign extends CommandBase {
   public double yaw;
   public int index;
   public double offset;
+  public double distance;
 
-
-  public LimelightAlign(SwerveSubsystem swervesub, Limelight limelightsub, int PipelineIndex, double Xoffset) {
+  /**
+   * Aligns to the nearest target that limelight can dectect
+   * @param swervesub the swerve subsystem
+   * @param limelightsub the limelight subsystem
+   * @param pipelineIndex the index of the pipeline you want limelight to detect
+   * @param Xoffset the Xoffset
+   * @param distancefromObject the distance you want the robot to be from the object in meters
+   */
+  public LimelightAlign(SwerveSubsystem swervesub, Limelight limelightsub, int pipelineIndex, double Xoffset, double distanceFromObject) {
     // Use addRequirements() here to declare subsystem dependencies.
     swerve = swervesub;
     lime = limelightsub;
@@ -27,6 +35,7 @@ public class LimelightAlign extends CommandBase {
     addRequirements(lime);
     int index = PipelineIndex;
     offset = Xoffset;
+    distance = distanceFromObject
     
   }
 
@@ -39,8 +48,9 @@ public class LimelightAlign extends CommandBase {
   public void execute() {
     lime.setPipeline(index);
     if (lime.img.hasTargets()) {
-      yaw = -lime.getXoffset();
-      swerve.setMotors(0, 0, yaw*(Math.PI/180)+offset);
+      yaw = lime.getTargetYaw();
+      double distanceToTravel = lime.getForwardDistance() - distance;
+      swerve.setMotors(0, distanceToTravel, yaw*(Math.PI/180)+offset);
     }
   }
 
@@ -51,7 +61,7 @@ public class LimelightAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (-lime.getXoffset() <= 1 || -lime.getXoffset() >= -1) {
+    if (lime.getTargetYaw() <= 1 || lime.getTargetYaw() >= -1) {
       return true;
     }
     return false;

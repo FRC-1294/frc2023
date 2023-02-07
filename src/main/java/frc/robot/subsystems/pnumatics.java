@@ -14,11 +14,15 @@ import frc.robot.Constants;
 
 public class pnumatics extends SubsystemBase {
   /** Creates a new pnumatics. */
-    Solenoid intakeSolenoid1;
-    Solenoid intakeSolenoid2;
-    Compressor phCompressor;
-    AnalogPotentiometer pressureSensor;
-    PneumaticHub hub;
+  Solenoid intakeSolenoid1;
+  Solenoid intakeSolenoid2;
+  Compressor phCompressor;
+  AnalogPotentiometer pressureSensor;
+  PneumaticHub hub;
+
+  /**
+   * Make a new pnumatics subsystem
+   */
   public pnumatics() {
     intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.intakeSolenoid1ID);
     phCompressor = new Compressor(Constants.compressorID, PneumaticsModuleType.REVPH);
@@ -37,6 +41,11 @@ public class pnumatics extends SubsystemBase {
 
     // This method will be called once per scheduler run
   }
+
+  /**
+   * Sets the pnumatics
+   * @param extend whether or not the solenoid should extend
+   */
   public void setPneumatics(boolean extend){
     intakeSolenoid1.set(extend);
   }

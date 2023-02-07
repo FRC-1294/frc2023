@@ -35,10 +35,20 @@ public class Camera extends SubsystemBase {
   public JFrame frameRed;
     // Creates the CvSink and connects it to the UsbCamera
 
+  /**
+   * Very outdated thing
+   * Not sure if it will be used
+   * I think it use for dectecting stuff using opencv
+   * it creates the camera
+   */
   public Camera() {
    setup();
    update();
   }
+
+  /**
+   * Sets up the camera
+   */
   private void setup(){
 
     CameraServer.startAutomaticCapture();
@@ -55,6 +65,10 @@ public class Camera extends SubsystemBase {
     frameRed.setVisible(true);
 
   }
+
+  /**
+   * Makes frames
+   */
   private void createFrames(Container title, Mat image,String windowName){
     frameRed = new JFrame(windowName);
     
@@ -64,6 +78,10 @@ public class Camera extends SubsystemBase {
     imgPanel.add(imgContourLabel);
     title.add(imgPanel);
   }
+
+  /**
+   * Updates camera
+   */
   private void update(){
     Mat orImage = Imgcodecs.imread("rage.jpg");
     List<Mat> colors = new ArrayList<Mat>();
@@ -87,6 +105,10 @@ public class Camera extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  /**
+   * makes crosshairs
+   */
   public static Mat drawCrossHairs(Mat targImg){
     targImg.put((int)(targImg.rows()/2), (int)(targImg.cols()/2), 255);
     for (int i = 0; i>20; i++){
@@ -97,6 +119,10 @@ public class Camera extends SubsystemBase {
     }
     return targImg;
   }
+
+  /**
+   * Defines where is target is
+   */
   public static Mat applyBoundingBox(Mat targImg){
     Mat sheesh = new Mat();
     Mat edgedUpMap = new Mat();

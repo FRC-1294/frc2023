@@ -33,7 +33,12 @@ public class PoseEstimation extends SubsystemBase {
  SwerveSubsystem swerve;
  Limelight lime;
  SwerveDrivePoseEstimator poseEstimator;
- 
+
+  /**
+   * Makes a PoseEstimatior
+   * @param limelight the limelight subsystem
+   * @param swerve the swerve subsystem
+   */
   public PoseEstimation(Limelight limelight, SwerveSubsystem swerve) {
     this.swerve = swerve;
     lime = limelight;
@@ -75,6 +80,9 @@ public class PoseEstimation extends SubsystemBase {
     }
   }
 
+  /**
+   * @return the positon of the robot
+   */
   public Pose2d getPosition() {
     return poseEstimator.getEstimatedPosition();
   }

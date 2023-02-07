@@ -11,6 +11,10 @@ public class FieldSetup extends SubsystemBase {
   /** Creates a new FieldSetup. */
   Field2d field = new Field2d();
   SwerveSubsystem swervee;
+
+  /**
+   * Sets the field2d
+   */
   public FieldSetup(SwerveSubsystem swerve) {
     this.swervee = swerve;
     field.setRobotPose(this.swervee.getRobotPose());

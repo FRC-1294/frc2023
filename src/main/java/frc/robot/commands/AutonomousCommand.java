@@ -8,6 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class AutonomousCommand extends CommandBase {
   /** Creates a new AutonomousCommand. */
+  
+  /**
+   * AutonomousCommand
+   * NOTE: THIS COMMAND IS ENTIRELY BLANK IT DOES NOTHING AS OF 2/7/2023.
+   */
   public AutonomousCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
   }

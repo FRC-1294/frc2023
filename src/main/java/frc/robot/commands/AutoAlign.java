@@ -33,10 +33,16 @@ public class AutoAlign extends CommandBase {
 
   Optional<Pose3d> desiredPose3d;
 
+  /**
+   * Aligns to a april tag
+   * @param pose the PoseEstimation subsystem
+   * @param limelight the limelight subsystem
+   */
   public AutoAlign(PoseEstimation pose, Limelight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pose = pose;
     lime = limelight;
+    
     
   }
 

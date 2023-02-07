@@ -7,7 +7,9 @@ public class Gains {
 	public final double kMinOutput;
 	public final double kMaxOutput;
 
-
+	/**
+	 * Gains for PID
+	 */
 	public Gains(double _kP, double _kI, double _kD, double _kMinOutput, double _kMaxOutput){
 		kP = _kP;
 		kI = _kI;

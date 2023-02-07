@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,11 +29,23 @@ public class SwerveModule {
     public PIDController transController = new PIDController(Constants.kP, Constants.kI, Constants.kD);
     private Boolean isAbsoluteEncoder;
     private Boolean m_transInverted;
-    private Boolean m_rotInverted;    
-
+    private Boolean m_rotInverted;   
+    
+    /**
+     * Creates a new Swerve Module
+     * @param motorTransID the CAN id of the translation motor
+     * @param motorTransID the CAN id of the rotation motor
+     * @param universalEncoderID the analog port number that the absolute (universal) encoder is connected to
+     * @param transInverted is the translation motor inverted?
+     * @param rotInverted is the rotation motor inverted?
+     * @param universalEncoderOffsetinit the inital offset of the absolute (universal) encoder
+     * @param universalEncoderInverted is the absolute (universal) encoder inverted?
+     * @param pidController the PIDController for the rotation motor
+     * @param transCrontroller the PIDController for the translation motor
+     */
     public SwerveModule(int motorTransID, int motorRotID, int universalEncoderID,
      Boolean transInverted, Boolean rotInverted, double universalEncoderOffsetinit,
-     Boolean universalEncoderInverted, boolean isAbsEncoder,PIDController pidController,PIDController transController){
+     Boolean universalEncoderInverted, PIDController pidController,PIDController transController){
         this.isAbsoluteEncoder=isAbsEncoder;
         this.m_MotorTransID = motorTransID;
         this.m_UniversalEncoderID = universalEncoderID;
@@ -65,55 +76,53 @@ public class SwerveModule {
 
     }
     
+    /**
+     * @return Returns rotations of translation motor BEFORE GEAR RATIO
+     */
     public double getTransPosition(){
-
-        //Returns rotations of translation motor BEFORE GEAR RATIO
-
         return transEncoder.getPosition(); 
     }
 
-
+    /**
+     * @return returns rotations of rotation motor BEFORE GEAR RATIO
+     */
     public double getRotPosition(){
-
-        //returns rotations of rotation motor BEFORE GEAR RATIO
-
         return rotEncoder.getPosition();
-
     }
 
+    /**
+     * @return the RPM of Translation motor BEFORE GEAR RATIO
+     */
     public double getTransVelocity(){
-
-        //returns RPM of Translation BEFORE GEAR RATIO
-
         return transEncoder.getVelocity(); 
     }
-
+    
+    /**
+     * @return RPM of Rotation motor BEFORE GEAR RATIO
+     */
     public double getRotVelocity(){
-
-        //returns RPM of Rotation BEFORE GEAR RATIO
-
         return rotEncoder.getVelocity();
-
     }
 
+    /**
+     * resets the Absolute (Universal) Encoder Position
+     */
     public void resetEncoders(){
-
-        //Resets Relative encoder to Abs encoder position
-
         rotEncoder.setPosition((universalEncoder.getAbsolutePosition()-universalEncoder.getPositionOffset())*18);
-
-
     }
 
+    /**
+     * @return the SwerveModuleState
+     */
     public SwerveModuleState getState(){
-
-        // Returns SwerveModuleState
-
         return new SwerveModuleState(getTransVelocity()*Constants.RPMtoMPS*Constants.driveEncoderConversionFactortoRotations,
             new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactortoRad));
-    
     }
 
+    /**
+     * Sets the desiredState of the SwerveModule
+     * @param desiredState the desiredState of the SwerveModule
+     */
     public void setDesiredState(SwerveModuleState desiredState){
         
         //Stops returning to original rotation
@@ -137,46 +146,50 @@ public class SwerveModule {
         
         rotMotor.set(rotationPIDController.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactortoRad,
             desiredState.angle.getRadians()));
-
-
     }
 
+    /**
+     * Note: THIS METHOD WAS CREATED FOR PID TUNING ONLY
+     * @param setPoint the setPoint
+     */
     public void updatePositions(double setPoint){
-
-        //FOR PID TUNING ONLY
-
         rotationPIDController.setPID(Constants.kP, Constants.kI, Constants.kD);
         rotationPIDController.disableContinuousInput();
         double sp = rotationPIDController.calculate((getRotPosition()-0.5)*2*Math.PI/18, setPoint);
         rotMotor.set(sp);
     }
 
+    /**
+     * Sets the rotation wheel to its original state
+     * Used at start of match to make the wheel straight
+     */
     public void returnToOrigin(){
-
-        //Sets wheel rot to original state
-
         System.out.println("In PID loop");
         rotMotor.set(rotationPIDController.calculate(((getRotPosition()%18)*2*Math.PI/18), 0));
         rotationPIDController.setTolerance(0);
     }
 
     /**
-     * 
-     * @return 
+     * Gets the position of the Swerve Module
+     * @return the Position of the Swerve Module
      */
     public SwerveModulePosition getModulePos(){
-
         return new SwerveModulePosition(transEncoder.getPosition()/Constants.weirdAssOdVal*Constants.kDriveEncoderRot2Meter,
             new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactortoRad));
-    
     }
 
+    /**
+     * Stops the translation motor and the rotation motor
+     */
     public void stop() {
         transMotor.set(0);
         rotMotor.set(0);
 
     }
 
+    /**
+     * returns the PIDController of the rotation motor
+     */
     public PIDController getPIDController(){
         return this.rotationPIDController;
     }

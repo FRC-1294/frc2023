@@ -47,7 +47,11 @@ public class AutonTrajectory extends CommandBase {
 
   double startTime = 0;
 
-
+  /**
+   * Trajectory
+   * @param swerve the swerve subsystem
+   * @param desiredEndHeading the heading of the robot at the of the trajectory
+   */
   public AutonTrajectory(SwerveSubsystem swerve, double desiredEndHeading) {
     this.swerve = swerve;
     // Use addRequirements() here to declare subsystem dependencies.

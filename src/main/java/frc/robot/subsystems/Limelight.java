@@ -51,7 +51,9 @@ public class Limelight extends SubsystemBase {
   // Transformation from robot to 
   public final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
   
-
+  /**
+   * Creates a limelight subsystem
+   */
   public Limelight() {
     photonCamera = new PhotonCamera(net, "skype");
     pipelineVals.put("TAG", 1);
@@ -69,35 +71,54 @@ public class Limelight extends SubsystemBase {
     img = photonCamera.getLatestResult();
   }
 
-  public double getXoffset(){
+  /**
+   * @return the Yaw of the Target
+   */
+  public double getTargetYaw(){
     PhotonTrackedTarget targ = img.getBestTarget();
-    return -targ.getYaw();
+    return targ.getYaw();
     
   }
 
+  /**
+   * The Distance to the target in meters
+   */
   public double getForwardDistance(){
     PhotonTrackedTarget targ = img.getBestTarget();
     return PhotonUtils.calculateDistanceToTargetMeters(0.05, 0.05, 0, targ.getPitch());
   }
 
+  /**
+   * Sets the Pipeline
+   * @param PipelineIndex the index of the pipeline
+   */
   public void setPipeline(int PipelineIndex){
     photonCamera.setPipelineIndex(PipelineIndex);;
   }
 
+  /**
+   * Adds a AprilTag
+   * @param Tags a Hashmap of the April Tag
+   */
   public void addAprilTag(HashMap<String,Object>[]Tags){
     for (HashMap<String,Object> object : Tags) {
       fiducialHashMap.put((String)object.get("ID"),(Pose2d)object.get("POSE"));
     }
   }
 
-
-  public Object hasTarg(Supplier<Object> Func){
+  /**
+   * Whether or not the limelight sees a target
+   */
+  public boolean hasTarg(){
     if (img.hasTargets()){
-      return Func.get();
+      return true;
     }
-    return null;
+    return false;
   }
 
+  /**
+   * @return the best target that the limelight sees
+   */
   public PhotonTrackedTarget getBestTarget() {
     return img.getBestTarget();
   }

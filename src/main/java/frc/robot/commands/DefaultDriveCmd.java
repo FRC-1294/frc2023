@@ -18,6 +18,12 @@ public class DefaultDriveCmd extends CommandBase {
   private SlewRateLimiter xLimiter;
   private SlewRateLimiter yLimiter;
   private SlewRateLimiter turningLimiter;
+
+  /**
+   * Auton stuff
+   * @param joys the joystick subsystem
+   * @param swerve the swerve subsystem
+   */
   public DefaultDriveCmd(Joysticks joys, SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.joyee = joys;

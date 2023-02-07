@@ -39,10 +39,10 @@ public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
 
   private final PIDController headingController;
-  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,.997,false, true,Constants.flPID, Constants.flPIDTrans);
-  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.875,false, true,Constants.frPID, Constants.frPIDTrans);
-  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,false,true,0.300,false, true,Constants.blPID, Constants.blPIDTrans);
-  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.803,false, true, Constants.brPID, Constants.brPIDTrans); 
+  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,.997,false, Constants.flPID, Constants.flPIDTrans);
+  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.875,false, Constants.frPID, Constants.frPIDTrans);
+  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,false,true,0.300,false, Constants.blPID, Constants.blPIDTrans);
+  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.803,false, Constants.brPID, Constants.brPIDTrans); 
 
   private SimpleMotorFeedforward feedforwardController = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
 
@@ -58,6 +58,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public Field2d field = new Field2d();
 
+  /**
+   * Creates a new SwerveSubsystem
+   * @param joys The Joystick Subsystem
+   */
   public SwerveSubsystem(Joysticks joys) {
     m_kinematics = new SwerveDriveKinematics(
       new Translation2d(Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
@@ -109,39 +113,66 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
   }
+
+  /**
+   * Resets the NavX Gyro
+   */
   public void resetGyro(){
     navx.reset();
   }
 
+  /**
+   * @return The angle that the robot is facing
+   */
   public double getHeading(){
     return Math.IEEEremainder(navx.getAngle(), 360);
   }
+
+  /**
+   * @return Returns a Rotation2d with the current heading of the robot
+   */
   public Rotation2d getRotation2d(){
     return Rotation2d.fromDegrees(getHeading());
   }
+
+  /**
+   * Sets the module state for all modules
+   * @param desiredStates a list of SwerveModuleState objects, in order of Front Left, Front Right, Back Left, and Back Right
+   */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
 
-    if(true){
-      SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.kTeleDriveMaxSpeedMetersPerSecond*10);
-      SmartDashboard.putNumber("Module1ROT", desiredStates[0].angle.getRadians());
-      SmartDashboard.putNumber("Module2ROT", desiredStates[1].angle.getRadians());
-      SmartDashboard.putNumber("Module3ROT", desiredStates[2].angle.getRadians());
-      SmartDashboard.putNumber("Module4ROT", desiredStates[3].angle.getRadians());
-      frontLeft.setDesiredState(desiredStates[0]);
-      frontRight.setDesiredState(desiredStates[1]);
-      backLeft.setDesiredState(desiredStates[2]);
-      backRight.setDesiredState(desiredStates[3]);
-    }
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.kTeleDriveMaxSpeedMetersPerSecond*10);
+    SmartDashboard.putNumber("Module1ROT", desiredStates[0].angle.getRadians());
+    SmartDashboard.putNumber("Module2ROT", desiredStates[1].angle.getRadians());
+    SmartDashboard.putNumber("Module3ROT", desiredStates[2].angle.getRadians());
+    SmartDashboard.putNumber("Module4ROT", desiredStates[3].angle.getRadians());
+    frontLeft.setDesiredState(desiredStates[0]);
+    frontRight.setDesiredState(desiredStates[1]);
+    backLeft.setDesiredState(desiredStates[2]);
+    backRight.setDesiredState(desiredStates[3]);
 }
+
+  /**
+   * @return A list of SwerveModulePosition objects, in order of frontLeft, frontRight, backLeft, backRight
+   */
   public SwerveModulePosition[] getModuleStates(){
     return(new SwerveModulePosition[]{frontLeft.getModulePos(),frontRight.getModulePos(),backLeft.getModulePos(),backRight.getModulePos()});
   }
 
+  /**
+   * @return new SwerveModulePosition list of objects for frontLeft, frontRight, backLeft, backRight
+   */
   public SwerveModulePosition[] zeroStates(){
     return(new SwerveModulePosition[]{new SwerveModulePosition(),
       new SwerveModulePosition(),new SwerveModulePosition(),new SwerveModulePosition()});
   }
 
+  /**
+   * Moves the motors
+   * @param x the change in x
+   * @param y the change in y
+   * @param rot the rotation that the robot will be facing at the end
+   */
   public void setMotors(double x,double y, double rot){
     if (navx.getRate() == 0 & rot == 0 & Constants.gyroHold == true){
       rot = Constants.brPID.calculate(navx.getAngle(),Constants.priorGyroAngle);
@@ -166,6 +197,10 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Heading", getHeading());
   }
 
+  /**
+   * does feedforward
+   * @param distanceMeters the amount you want to move
+   */
   public void doFeedforwardAllMotors(double distanceMeters) {
     frontLeft.transController.setSetpoint(distanceMeters);
     double voltage = feedforwardController.calculate(5);
@@ -181,14 +216,25 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   }
 
+  /**
+   * resets the pose of the robot
+   * @param poe the Pose of the robot in a Pose2d
+   */
   public void resetRobotPose(Pose2d poe){
     m_odometry.resetPosition(this.getRotation2d(),getModuleStates(),poe);
   }
 
+  /**
+   * @return the robot pose (odometry)
+   */
   public Pose2d getRobotPose(){
     return m_odometry.getPoseMeters();
   }
 
+  /**
+   * resets all the rotation motors so that the wheel is straight again
+   * should be run before match
+   */
   public void goToOrigin(){
     System.out.println("executed");
     frontRight.returnToOrigin();
@@ -197,6 +243,12 @@ public class SwerveSubsystem extends SubsystemBase {
     backRight.returnToOrigin();
   }
 
+  /**
+   * sets the PID values for the all rotation PIDControllers and prints the PID values
+   * @param p the p value
+   * @param i the i value
+   * @param d the d value
+   */
   public void setAllPIDControllers(double p, double i, double d) {
     System.out.println(p+" "+i+" "+d);
     frontRight.setPidController(p, i, d);
@@ -204,6 +256,10 @@ public class SwerveSubsystem extends SubsystemBase {
     backRight.setPidController(p, i, d);
     backLeft.setPidController(p, i, d);
   }
+
+  /**
+   * @return a list of all the SwerveModules
+   */
   public SwerveModule[] getRawModules(){
     return new SwerveModule[]{frontLeft,frontRight,backLeft,backRight};
   }

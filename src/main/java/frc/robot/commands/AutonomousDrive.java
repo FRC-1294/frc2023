@@ -24,6 +24,11 @@ public class AutonomousDrive extends CommandBase {
   SwerveSubsystem swerve;
   SwerveControllerCommand yeet;
   Boolean done = false;
+
+  /**
+   * Autonomous
+   * @param s the Swerve subsystem
+   */
   public AutonomousDrive(SwerveSubsystem s) {
 //     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = s;

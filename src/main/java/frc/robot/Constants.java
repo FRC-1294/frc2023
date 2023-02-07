@@ -34,6 +34,8 @@ public final class Constants {
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 4;
     public static final double kDriveEncoderRot2Meter = 2*Math.PI * Units.inchesToMeters(2); //multiply by gearratio check gear ratio for trans encoder
     public static final double RPMtoMPS = kDriveEncoderRot2Meter/60;
+    public static final int AprilTagPipelineIndex = 1;
+    public static final int CubeDectectPipelineIndex = 0;
 
 
     //Encoders

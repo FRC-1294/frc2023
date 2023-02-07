@@ -33,6 +33,11 @@ public class moveTo extends CommandBase {
   public double yPoint;
   public double rotPoint;
 
+  /**
+   * moves the robot
+   * @param transform the Transform2d that contains the X, Y and rot
+   * @param swervesub the swerve subsystem
+   */
   public moveTo(Transform2d transform, SwerveSubsystem swervesub) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;

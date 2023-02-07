@@ -15,6 +15,12 @@ public class PIDtuning extends CommandBase {
   /** Creates a new PIDtuning. */
   SwerveSubsystem swerveee;
   Joysticks joyseee;
+
+  /**
+   * PIDtuning stuff
+   * @param joys the joystick subsystem
+   * @param swerve the swerve subsystem
+   */
   public PIDtuning( Joysticks joys,SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerveee = swerve;

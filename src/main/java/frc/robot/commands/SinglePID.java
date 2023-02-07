@@ -17,6 +17,12 @@ public class SinglePID extends CommandBase {
   SwerveModule selectedModule;
   Joysticks joys;
   Double sp;
+
+  /**
+   * PIDTuning for one swerve module
+   * @param module the swerve module you want to tune
+   * @param swervee the swerve subsystem
+   */
   public SinglePID(SwerveModule module, SwerveSubsystem swervee) {
     this.selectedModule = module;
     SmartDashboard.putNumber("kP", Constants.kP);
