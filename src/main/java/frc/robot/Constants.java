@@ -7,11 +7,16 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.PIDController;
+import java.util.HashMap;
+
+import com.pathplanner.lib.auto.PIDConstants;
+
+import edu.wpi.first.math.controller.PIDConstants;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -26,7 +31,6 @@ public final class Constants {
     public static final double maxSpeedMPS = 12.0;
 
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2.0 * 2.0 * Math.PI;
-
     public static final double rad2Deg = 180/Math.PI;
     public static final double kTeleDriveMaxSpeedMetersPerSecond = 1.0;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
@@ -44,15 +48,15 @@ public final class Constants {
 
 
     //PID
-    public static final PIDController frPID = new PIDController(0.771, 0.025, 0.015);
-    public static final PIDController flPID = new PIDController(0.56, 0.025, 0.01);
-    public static final PIDController brPID = new PIDController(0.771, 0, 0.015);
-    public static final PIDController blPID = new PIDController(0.56, 0, 0.01);
+    public static final PIDConstants frPID = new PIDConstants(0.771, 0.025, 0.015);
+    public static final PIDConstants flPID = new PIDConstants(0.56, 0.025, 0.01);
+    public static final PIDConstants brPID = new PIDConstants(0.771, 0, 0.015);
+    public static final PIDConstants blPID = new PIDConstants(0.56, 0, 0.01);
 
-    public static final PIDController frPIDTrans = new PIDController(0.5, 0, 0);
-    public static final PIDController flPIDTrans = new PIDController(0.5, 0, 0);
-    public static final PIDController brPIDTrans = new PIDController(0.5, 0, 0);
-    public static final PIDController blPIDTrans = new PIDController(0.5, 0, 0);
+    public static final PIDConstants frPIDTrans = new PIDConstants(0.5, 0, 0);
+    public static final PIDConstants flPIDTrans = new PIDConstants(0.5, 0, 0);
+    public static final PIDConstants brPIDTrans = new PIDConstants(0.5, 0, 0);
+    public static final PIDConstants blPIDTrans = new PIDConstants(0.5, 0, 0);
 
     // Distance between right and left wheels
     public static final double kTrackWidth = Units.inchesToMeters(25.5);
@@ -132,4 +136,9 @@ public final class Constants {
     public static final double kChargeStationBalanceBeamLengthCm = 122;
     public static final double kChargeStationMountLengthCm = 35.5; 
     public static final double kAngleDeadZoneDeg = 0.5;
+
+
+    //Constants for TGWithPPlib following:
+    public static final HashMap <String,Command> eventMap = new HashMap<>();
+    //empty for now
 }

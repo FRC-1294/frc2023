@@ -1,4 +1,5 @@
 package frc.robot;
+import com.pathplanner.lib.auto.PIDConstants;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -11,8 +12,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -28,16 +31,13 @@ public class SwerveModule {
     private RelativeEncoder rotEncoder;
     public AnalogEncoder universalEncoder;
     public SparkMaxPIDController rotPID;
-    public PIDController rotationPIDController;
-    public PIDController transController = new PIDController(Constants.kP, Constants.kI, Constants.kD);
-    private Boolean isAbsoluteEncoder;
+    public SparkMaxPIDController transPID;
     private Boolean m_transInverted;
     private Boolean m_rotInverted;    
 
     public SwerveModule(int motorTransID, int motorRotID, int universalEncoderID,
      Boolean transInverted, Boolean rotInverted, double universalEncoderOffsetinit,
-     Boolean universalEncoderInverted, boolean isAbsEncoder,PIDController pidController,PIDController transController){
-        this.isAbsoluteEncoder=isAbsEncoder;
+     Boolean universalEncoderInverted, boolean isAbsEncoder,Gains rotController,Gains transController){
         this.m_MotorTransID = motorTransID;
         this.m_UniversalEncoderID = universalEncoderID;
         this.m_MotorRotID = motorRotID;
@@ -61,8 +61,20 @@ public class SwerveModule {
 
         transEncoder = transMotor.getEncoder();
         rotEncoder = rotMotor.getEncoder();
-        rotationPIDController = pidController;
-        rotationPIDController.enableContinuousInput(-Math.PI,Math.PI);       
+        rotPID = rotMotor.getPIDController();
+        transPID = transMotor.getPIDController();
+        rotPID.setPositionPIDWrappingMaxInput(0.5);
+        rotPID.setPositionPIDWrappingMinInput(-0.5);
+        rotPID.setPositionPIDWrappingEnabled(true);
+        rotPID.setP(rotController.kP);
+        rotPID.setI(rotController.kI);
+        rotPID.setD(rotController.kD);
+        transPID.setP(transController.kP);
+        transPID.setI(transController.kI);
+        transPID.setD(transController.kD);
+        rotPID.setFF(rotController.kFF);
+        transPID.setFF(rotController.kFF);
+
         resetEncoders(); 
 
     }
@@ -74,6 +86,10 @@ public class SwerveModule {
 
         return transEncoder.getPosition(); 
 
+    }
+    public void setUpPIDControllers(SparkMaxPIDController rotPID, SparkMaxPIDController transPID){
+
+        
     }
 
     /**
@@ -141,15 +157,10 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         //PID Controller for both translation and rotation
-        transMotor.set(transController.calculate(
-            transEncoder.getVelocity()*Constants.driveEncoderConversionFactortoRotations*Constants.RPMtoMPS,
-            desiredState.speedMetersPerSecond)/Constants.maxSpeedMPS);
-        
-        //transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
-        //Keep this
-        
-        rotMotor.set(rotationPIDController.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactortoRad,
-            desiredState.angle.getRadians()));
+
+        transPID.setReference(desiredState.speedMetersPerSecond/Constants.RPMtoMPS, ControlType.kVelocity);
+
+        rotPID.setReference(Units.degreesToRotations(desiredState.angle.getRadians()/Constants.angleEncoderConversionFactortoRad), ControlType.kPosition);
 
 
     }
@@ -161,10 +172,11 @@ public class SwerveModule {
 
         //FOR PID TUNING ONLY
 
-        rotationPIDController.setPID(Constants.kP, Constants.kI, Constants.kD);
-        rotationPIDController.disableContinuousInput();
-        double sp = rotationPIDController.calculate((getRotPosition()-0.5)*2*Math.PI/18, setPoint);
-        rotMotor.set(sp);
+        rotPID.setD(Constants.kD);
+        rotPID.setP(Constants.kP);
+        rotPID.setI(Constants.kI);
+        rotPID.setPositionPIDWrappingEnabled(false);
+        rotPID.setReference(Constants.tuningSetpoint, ControlType.kPosition);
     }
 
 
@@ -176,8 +188,8 @@ public class SwerveModule {
         //Sets wheel rot to original state
 
         System.out.println("In PID loop");
-        rotMotor.set(rotationPIDController.calculate(((getRotPosition()%18)*2*Math.PI/18), 0));
-        rotationPIDController.setTolerance(0);
+        //rotMotor.set(rotationPIDController.calculate(((getRotPosition()%18)*2*Math.PI/18), 0));
+        //rotationPIDController.setTolerance(0);
     }
 
     /**
@@ -201,7 +213,7 @@ public class SwerveModule {
     }
 
     public PIDController getPIDController(){
-        return this.rotationPIDController;
+        return new PIDController(this.rotPID.getP(), this.rotPID.getI(), this.rotPID.getD());
     }
     /**
      * Sets the mode of the translation motor

@@ -4,16 +4,15 @@ public class Gains {
 	public final double kP;
 	public final double kI;
 	public final double kD;
-	public final double kMinOutput;
-	public final double kMaxOutput;
+
+	public final double kFF;
 
 
-	public Gains(double _kP, double _kI, double _kD, double _kMinOutput, double _kMaxOutput){
+	public Gains(double _kP, double _kI, double _kD, double _kFF){
 		kP = _kP;
 		kI = _kI;
 		kD = _kD;
-		kMinOutput = _kMinOutput;
-		kMaxOutput = _kMaxOutput;
+		kFF = _kFF;
 	}
 
 	@Override
