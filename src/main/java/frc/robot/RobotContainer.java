@@ -18,6 +18,7 @@ import frc.robot.commands.DefaultDriveCmd;
 import frc.robot.commands.PIDtuning;
 import frc.robot.commands.SinglePID;
 import frc.robot.subsystems.ArmControlSubsystem;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -31,7 +32,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final SwerveSubsystem swerve = new SwerveSubsystem();
   //public final ArmControlSubsystem armControl = new ArmControlSubsystem();
-  //public final Limelight lime = new Limelight();
+  public final Limelight lime = new Limelight();
+  
+  
   //public final PoseEstimation pose = new PoseEstimation(lime, swerve);
   public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(swerve);
   public final PIDtuning pid = new PIDtuning(swerve);
@@ -58,7 +61,7 @@ public class RobotContainer {
     moduleSelector.addOption("Back Left", allModules[2]);
     moduleSelector.addOption("Back Right", allModules[3]);
 
-
+    lime.setPipeline(0, true);
     if (!DriveConstants.tuningPID){swerve.setDefaultCommand(defaultDrive);}
     else{swerve.setDefaultCommand(new SinglePID(selecModule, swerve));}
   

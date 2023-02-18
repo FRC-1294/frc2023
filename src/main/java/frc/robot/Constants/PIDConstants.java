@@ -8,9 +8,9 @@ import edu.wpi.first.math.controller.PIDController;
 
 /** Add your docs here. */
 public class PIDConstants {
-    public static final PIDController frPID = new PIDController(0.771, 0.025, 0.015);
+    public static final PIDController frPID = new PIDController(0.671, 0.025, 0.015);
     public static final PIDController flPID = new PIDController(0.56, 0.025, 0.01);
-    public static final PIDController brPID = new PIDController(0.771, 0, 0.015);
+    public static final PIDController brPID = new PIDController(0.671, 0, 0.015);
     public static final PIDController blPID = new PIDController(0.56, 0, 0.01);
 
     public static final PIDController frPIDTrans = new PIDController(0.5, 0, 0);

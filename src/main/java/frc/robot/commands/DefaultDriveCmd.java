@@ -18,9 +18,13 @@ public class DefaultDriveCmd extends CommandBase {
   private SlewRateLimiter xLimiter;
   private SlewRateLimiter yLimiter;
   private SlewRateLimiter turningLimiter;
+
+  private boolean isPrecision = false;
+
   public DefaultDriveCmd(SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerveee = swerve;
+
     xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccMPS);
     yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccMPS);
     turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccRadPS);
@@ -34,13 +38,29 @@ public class DefaultDriveCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    if(Input.getPrecisionsToggle()){
+      isPrecision = !isPrecision;
+    }
+
+
     double x = Input.getJoystickX();
     double y = Input.getJoystickY();
     double rot = Input.getRot();
-  
-    x = Math.abs(x) > 0.1 ? x : 0.0;
-    y = Math.abs(y) > 0.1 ? y : 0.0;
-    rot = Math.abs(rot) > 0.05 ? rot : 0.0;
+    if (isPrecision){
+      rot = rot/2;
+      x = x/2;
+      y = y/2;
+      x = Math.abs(x) > 0.01 ? x : 0.0;
+      y = Math.abs(y) > 0.01 ? y : 0.0;
+      rot = Math.abs(rot) > 0.01 ? rot : 0.0;
+    }
+    else{
+      x = Math.abs(x) > 0.1 ? x : 0.0;
+      y = Math.abs(y) > 0.1 ? y : 0.0;
+      rot = Math.abs(rot) > 0.05 ? rot : 0.0;
+    }
+
       
     // 3. Make the driving smoother
     x = xLimiter.calculate(x) * DriveConstants.kPhysicalMaxSpeedMPS;

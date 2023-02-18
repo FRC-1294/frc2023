@@ -47,7 +47,7 @@ public class LimelightAlign extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    lime.setPipeline(index);
+    lime.setPipeline(index,false);
     if (lime.img.hasTargets()) {
       yaw = lime.getXoffset();
       swerve.setMotors(0,rotPID.calculate(yaw,offset),0);

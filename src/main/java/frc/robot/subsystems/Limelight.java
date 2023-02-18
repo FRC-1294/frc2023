@@ -35,7 +35,7 @@ public class Limelight extends SubsystemBase {
   //NetworkTable table = NetworkTableInstance.getDefault();
   PhotonCamera photonCamera;
   NetworkTableInstance net =  NetworkTableInstance.getDefault();
-  NetworkTable lime = net.getTable("photonvision");
+  NetworkTable lime = net.getTable("skype");
   public PhotonPipelineResult img;
   public static enum Pipeline{
     TAG,
@@ -53,10 +53,9 @@ public class Limelight extends SubsystemBase {
   
 
   public Limelight() {
-    photonCamera = new PhotonCamera(net, "skype");
+    photonCamera = new PhotonCamera(net, "Skype");
     pipelineVals.put("TAG", 1);
     pipelineVals.put("REFLECTION", 2);
-    pipelineVals.put("DRIVE", 3);
     pipelineVals.put("CUBE", 0);
 
                 
@@ -67,6 +66,7 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     img = photonCamera.getLatestResult();
+    
   }
 
   public double getXoffset(){
@@ -80,8 +80,9 @@ public class Limelight extends SubsystemBase {
     return PhotonUtils.calculateDistanceToTargetMeters(0.05, 0.05, 0, targ.getPitch());
   }
 
-  public void setPipeline(int PipelineIndex){
-    photonCamera.setPipelineIndex(PipelineIndex);;
+  public void setPipeline(int PipelineIndex, boolean driverMode){
+    photonCamera.setPipelineIndex(PipelineIndex);
+    photonCamera.setDriverMode(driverMode);
   }
 
 public void addAprilTag(HashMap<String,Object>[]Tags){

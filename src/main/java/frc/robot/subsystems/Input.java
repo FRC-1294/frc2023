@@ -8,7 +8,8 @@ import frc.robot.Constants.JoystickConstants;
 /** Add your docs here. */
 public class Input {
 
-    private static boolean useXbox = false; 
+    private static boolean useXbox = true; 
+
 
     private static Joystick rJoystick = new Joystick (JoystickConstants.rotJoystickPort);
     private static Joystick tJoystick = new Joystick (JoystickConstants.transJoystickPort);
@@ -38,6 +39,7 @@ public class Input {
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
     public static boolean getRobotOriented(){return tJoystick.getTrigger();}
     public static boolean runAutoBalance(){return tJoystick.getRawButton(3);}
+    public static boolean getPrecisionsToggle(){return rJoystick.getTriggerPressed(); }
 
     //xbox controller 
     public static boolean getA(){return xboxController.getAButtonPressed();}
