@@ -36,22 +36,22 @@ public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
 
   private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
-   0,false, true,0.889,false, true,
+   0,true, false,0.889,false, true,
    PIDConstants.flPID, PIDConstants.flPIDTrans);
 
   
    private final SwerveModule frontRight = new SwerveModule(DriveConstants.frontRightDrive, DriveConstants.frontRightSteer,
-   1,true,true,0.352,false, true,
+   1,false,false,0.352,false, true,
    PIDConstants.frPID,PIDConstants.frPIDTrans);
 
 
   private final SwerveModule backLeft = new SwerveModule(DriveConstants.rearLeftDrive, DriveConstants.rearLeftSteer,
-  2,false,true,0.288,false, true,
+  2,true,false,0.288,false, true,
   PIDConstants.blPID,PIDConstants.flPIDTrans);
 
 
   private final SwerveModule backRight = new SwerveModule(DriveConstants.rearRightDrive, DriveConstants.rearRightSteer,
-  3,true,true,0.952,false, true,
+  3,false,false,0.952,false, true,
    PIDConstants.brPID,PIDConstants.brPIDTrans); 
 
 
@@ -72,10 +72,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public SwerveSubsystem() {
     m_kinematics = new SwerveDriveKinematics(
-      new Translation2d(DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2),
       new Translation2d(DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidthMeters / 2),
-      new Translation2d(-DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2),
-      new Translation2d(-DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidthMeters / 2));
+      new Translation2d(DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2),
+      new Translation2d(-DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidthMeters / 2),
+      new Translation2d(-DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2));
     m_odometry = new SwerveDriveOdometry(m_kinematics, getRotation2d(), this.getModulePositions());
     SmartDashboard.putNumber("p", 0);
     SmartDashboard.putNumber("i", 0);
@@ -97,7 +97,10 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition());
       SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition()-getRawModules()[i]._universalEncoder.getPositionOffset());
       SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._universalEncoder.getPositionOffset());
+      
     }
+
+    SmartDashboard.putNumber("FLRotationDeg", getRawModules()[0].getRotPosition()%18/18*360);
 
     m_odometry.update(getRotation2d(), getModulePositions());
     SmartDashboard.putNumber("OdometryX", m_odometry.getPoseMeters().getX());
@@ -148,6 +151,9 @@ public class SwerveSubsystem extends SubsystemBase {
       }
 
     frontLeft.setDesiredState(desiredStates[0],mode);
+
+    SmartDashboard.putNumber("FLDesiredRotDeg", desiredStates[0].angle.getDegrees());
+
     frontRight.setDesiredState(desiredStates[1],mode);
     backLeft.setDesiredState(desiredStates[2],mode);
     backRight.setDesiredState(desiredStates[3],mode);

@@ -53,6 +53,7 @@ public class SwerveModule {
 
         _transEncoder = _transMotor.getEncoder();
         _rotEncoder = _rotMotor.getEncoder();
+
         _rotationPIDController = pidController;
         _rotationPIDController.enableContinuousInput(-Math.PI,Math.PI);       
         resetEncoders(); 
@@ -115,6 +116,8 @@ public class SwerveModule {
      */
     public void setDesiredState(SwerveModuleState desiredState, DriveMode dMode){
         
+        
+        
         // Stops returning to original rotation
         if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
             stop();
@@ -138,6 +141,10 @@ public class SwerveModule {
         
         _rotMotor.set(_rotationPIDController.calculate(_rotEncoder.getPosition()*DriveConstants.angleEncoderConversionFactortoRad,
             desiredState.angle.getRadians()));
+
+
+        SmartDashboard.putNumber("desired" + this._universalEncoderID, desiredState.angle.getDegrees());
+        SmartDashboard.putNumber("rotation" + this._universalEncoderID, _rotEncoder.getPosition()%18/18*360);
     }
 
     /**
