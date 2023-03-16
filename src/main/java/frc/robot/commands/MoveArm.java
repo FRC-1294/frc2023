@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawMotor;
-import frc.robot.subsystems.ArmControlSubsystem.ArmSetting;
+import frc.robot.subsystems.ArmControlSubsystem.ArmMode;
 
 public class MoveArm extends CommandBase {
   /** Creates a new MoveArm. */
@@ -17,7 +17,7 @@ public class MoveArm extends CommandBase {
   public ClawMotor claw;
   public boolean intakeTrue;
   public boolean outtakeTrue;
-  public ArmSetting armset;
+  public ArmMode armset;
   public boolean done = false;
 
   private double forTime = 0;
@@ -26,7 +26,7 @@ public class MoveArm extends CommandBase {
 
   Timer timer;
 
-  public MoveArm(ArmControlSubsystem armSub, ClawMotor clawSub, boolean in, boolean out, boolean indefinite, ArmSetting armsetting) {
+  public MoveArm(ArmControlSubsystem armSub, ClawMotor clawSub, boolean in, boolean out, boolean indefinite, ArmMode armsetting) {
     // Use addRequirements() here to declare subsystem dependencies.
     arm = armSub;
     claw = clawSub;
@@ -41,7 +41,7 @@ public class MoveArm extends CommandBase {
     addRequirements(claw);
   }
 
-  public MoveArm(ArmControlSubsystem armSub, ClawMotor clawSub, boolean in, boolean out, double fortime, ArmSetting armsetting) {
+  public MoveArm(ArmControlSubsystem armSub, ClawMotor clawSub, boolean in, boolean out, double fortime, ArmMode armsetting) {
     // Use addRequirements() here to declare subsystem dependencies.
     arm = armSub;
     claw = clawSub;

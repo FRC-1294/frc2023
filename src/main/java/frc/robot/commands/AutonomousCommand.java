@@ -15,7 +15,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.ArmControlSubsystem.ArmSetting;
+import frc.robot.subsystems.ArmControlSubsystem.ArmMode;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawMotor;
 
@@ -93,11 +93,11 @@ public class AutonomousCommand extends CommandBase {
     if (middle){
       command = new SequentialCommandGroup(
         //turn and lift arm
-        new ParallelCommandGroup(new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, false, ArmSetting.NODE3)),
+        new ParallelCommandGroup(new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, false, ArmMode.NODE3)),
         //align with tag
         new AutoAlign(poseEstimator, lime, swerve),
         //spit out cube
-        new MoveArm(arm, claw, false, true, 1.0, ArmSetting.NODE3),
+        new MoveArm(arm, claw, false, true, 1.0, ArmMode.NODE3),
         //move forward and lower arm
         new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
         new AutoBalanceCommand(swerveSub));    //     new ParallelCommandGroup(new MoveTo(new Transform2d(new Translation2d(5, 0), new Rotation2d(0)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, false, ArmSetting.GNODE)),
@@ -115,23 +115,23 @@ public class AutonomousCommand extends CommandBase {
       //assuming it starts facing towards positive X and that you are in line with the cube piece across
       command = new SequentialCommandGroup(
         //turn and lift arm
-        new ParallelCommandGroup(new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, false, ArmSetting.NODE3)),
+        new ParallelCommandGroup(new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, false, ArmMode.NODE3)),
         // align with tag
         new AutoAlign(poseEstimator, lime, swerve),
         //spit out cube
-        new MoveArm(arm, claw, false, true, 1.0, ArmSetting.NODE3),
+        new MoveArm(arm, claw, false, true, 1.0, ArmMode.NODE3),
         //move forward and lower arm
-        new ParallelCommandGroup(new MoveTo(new Transform2d(new Translation2d(3, 0), new Rotation2d(0)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, false, ArmSetting.GNODE)),
+        new ParallelCommandGroup(new MoveTo(new Transform2d(new Translation2d(3, 0), new Rotation2d(0)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, false, ArmMode.GNODE)),
         //align with cube
         new LimelightAlign(swerve, lime, 0, 0),
         //move forward and get piece
-        new MoveTo(new Transform2d(new Translation2d(3, 0), new Rotation2d(0)), swerve, poseEstimator).raceWith(new MoveArm(arm, claw, true, false, true, ArmSetting.GNODE)),
+        new MoveTo(new Transform2d(new Translation2d(3, 0), new Rotation2d(0)), swerve, poseEstimator).raceWith(new MoveArm(arm, claw, true, false, true, ArmMode.GNODE)),
         //go back to nodes
-        new ParallelCommandGroup(new MoveTo(new Transform2d(new Translation2d(-5, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, false, ArmSetting.NODE3)),
+        new ParallelCommandGroup(new MoveTo(new Transform2d(new Translation2d(-5, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, false, ArmMode.NODE3)),
         //align with tag
         new AutoAlign(poseEstimator, lime, swerve),
         //spit out cube
-        new MoveArm(arm, claw, false, true, 1.0, ArmSetting.NODE3)
+        new MoveArm(arm, claw, false, true, 1.0, ArmMode.NODE3)
       ); 
     }
   }
