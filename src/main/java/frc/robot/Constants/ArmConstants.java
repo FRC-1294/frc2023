@@ -9,22 +9,21 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class ArmConstants {
-    public static final double pivotInitOffset = 0; //arbitrary. what the abs encoder returns when the arm is parallel to ground
     public static final double zeroAngleRad = Units.degreesToRadians(6.5);
-
     public static final double minAngleRad = Units.degreesToRadians(27.0);
     public static final double maxAngleRad = Units.degreesToRadians(115.0);
 
-    public static final double extensionEncoderToInches =  1.0/.25;
-    public static final double minExtensionIn = 41;//29.85+ 7.073; //basically the length of the first base //inches
-    //when it is at zeroAngleRad
-    public static final double zeroExtensionIn = 1.618 + minExtensionIn;
+    public static final double kArmExtensionMinPositionInches = 41;
+    public static final double zeroExtensionIn = 1.618 + kArmExtensionMinPositionInches;
+    public static final double kArmExtensionMaxTravelInches = 16;
+    public static final double kArmExtensionMaxPositionInches = kArmExtensionMaxTravelInches + kArmExtensionMinPositionInches;
 
+    public static final double extensionEncoderToInches =  1.0/.25;
 
     public static final double maxExtensionIn = 57;
 
     // Setpoints
-    public static final double[] extensionLevelsIn = {minExtensionIn, minExtensionIn, 43.0}; //inches
+    public static final double[] extensionLevelsIn = {kArmExtensionMinPositionInches, kArmExtensionMinPositionInches, 43.0}; //inches
     public static final double[] angleLevelsDeg = {35.0, 85.0, 99.75}; //degrees
 
     public static final double[] offSubstation = {85.5, 46.0}; // angle, inches including claw

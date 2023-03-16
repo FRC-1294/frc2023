@@ -40,7 +40,7 @@ public class AutoMapConstants {
         m_EventMap.put("teloscope_N3", new InstantCommand(()->arm.setDesiredExtension(ArmConstants.extensionLevelsIn[2]), arm));
         m_EventMap.put("teloscope_N2", new InstantCommand(()->arm.setDesiredExtension(ArmConstants.extensionLevelsIn[1]), arm));
         m_EventMap.put("teloscope_N1", new InstantCommand(()->arm.setDesiredExtension(ArmConstants.extensionLevelsIn[0]), arm));
-        m_EventMap.put("teloscope_neutral",new InstantCommand(()->arm.setDesiredExtension(ArmConstants.minExtensionIn), arm));
+        m_EventMap.put("teloscope_neutral",new InstantCommand(()->arm.setDesiredExtension(ArmConstants.kArmExtensionMinPositionInches), arm));
 
         m_EventMap.put("auto_balance",new AutoBalanceCommand(swerve));
         m_EventMap.put("align_cube", new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, 0));

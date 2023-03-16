@@ -56,7 +56,7 @@ public class DefaultArmCommand extends CommandBase {
       armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[2]);
       armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[2]));
     }else if(Input.getY()){
-      armControlSubsystem.setDesiredExtension(ArmConstants.minExtensionIn);
+      armControlSubsystem.setDesiredExtension(ArmConstants.kArmExtensionMinPositionInches);
       armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.minAngleRad));
     }
 
