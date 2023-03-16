@@ -1,8 +1,13 @@
 
 package frc.robot.subsystems;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -24,23 +29,52 @@ public class ArmControlSubsystem extends SubsystemBase {
     GNODE,
     NEUTRAL,
   }
-      
-  private final WPI_TalonFX leftPivotController = new WPI_TalonFX(ArmConstants.leftArmPivot);
-  private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.rightArmPivot);
+   
+  shooterRight = new WPI_TalonFX(SHOOTER_LEADER_ID);
+  shooterLeft = new WPI_TalonFX(SHOOTER_FOLLOWER_ID);
+
+  shooterRight.configAllSettings(config);
+
+  private final WPI_TalonFX leftPivotController = new WPI_TalonFX(ArmConstants.kArmPivotLeftMotorCANId);
+  private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.kArmPivotRightMotorCANId);
 
   private final CANSparkMax _armExtensionMotor = new CANSparkMax(ArmConstants.telescopicArmSpark, MotorType.kBrushless);
+
   private final RelativeEncoder _armExtensionEncoder = _armExtensionMotor.getEncoder();  
 
   private final PIDController _pivotPIDController = new PIDController(0.02, 0, 0);
-  private final PIDController _extensionPIDController = new PIDController(0.02, 0, 0);
   
   private ArmMode _armMode;
   private double _armAdjust;
 
   private double NODE1_ROT = 23;
 
-  public ArmControlSubsystem() {       
-    setConfig(false);
+  public ArmControlSubsystem() {      
+    TalonFXConfiguration  config = new TalonFXConfiguration();
+    config.slot0.kP = 0.03;
+    config.slot0.kI = 0;
+    config.slot0.kD = 0;
+    config.slot1.kP = 0.3;
+    config.slot1.kI = 0;
+    config.slot1.kD = 0;
+    config.slot1.allowableClosedloopError = 0;
+    config.neutralDeadband = 0;
+    config.voltageCompSaturation = 12;
+    
+    leftPivotController.configAllSettings(config);
+    rightPivotController.configAllSettings(config);
+    leftPivotController.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+    rightPivotController.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+
+    leftPivotController.enableVoltageCompensation(true);
+    rightPivotController.enableVoltageCompensation(true);
+
+    leftPivotController.setInverted(ArmConstants.leftPivotInverted);
+    rightPivotController.setInverted(TalonFXInvertType.OpposeMaster);
+
+    leftPivotController.setNeutralMode(NeutralMode.Brake);
+    rightPivotController.setNeutralMode(NeutralMode.Brake);
+
     SmartDashboard.putNumber("PivotkP", 2);
     SmartDashboard.putBoolean("armCoastMode", false);
   }
@@ -51,8 +85,6 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     rightPivotController.follow(leftPivotController);
 
-    rightPivotController.setInverted(TalonFXInvertType.OpposeMaster);
-    leftPivotController.setInverted(ArmConstants.leftPivotInverted);
 
     rightPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
     leftPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
@@ -94,6 +126,24 @@ public class ArmControlSubsystem extends SubsystemBase {
     else if(_armMode == ArmMode.GNODE){
       SmartDashboard.putString("Arm Mode", "GNODE");
     }
+  }
+
+  public void setVelocity(double rpm) {
+    var feedForwardVolts = feedForward.calculate(rpm);
+
+    rightPivotController.selectProfileSlot(0, 0);
+    rightPivotController.set(
+        ControlMode.Velocity,
+        rpsToedgesPerDecisec(rpm),
+        DemandType.ArbitraryFeedForward,
+        feedForwardVolts / 12);
+
+    leftPivotController.selectProfileSlot(0, 0);
+    leftPivotController.set(
+        ControlMode.Velocity,
+        rpsToedgesPerDecisec(rpm),
+        DemandType.ArbitraryFeedForward,
+        feedForwardVolts / 12);
   }
 
   //these functions assume the camera is on the front of the drivebase 

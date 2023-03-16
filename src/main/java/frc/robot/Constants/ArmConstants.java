@@ -1,10 +1,5 @@
 package frc.robot.Constants;
 
-import java.util.HashMap;
-import java.util.List;
-
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-
 import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
@@ -30,22 +25,20 @@ public class ArmConstants {
 //    public static final double[] offGround
 
 
-
     //CAP af find this!!!
     public static final double pivotPosInMetersY = Units.inchesToMeters(45.75);
 
 
-    //TBD
-    public static final int rightArmPivot = 16;
-    public static final int leftArmPivot = 15;
-    public static final int telescopicArmSpark = 10;
-    public static final int armPivotEncoderPort = 17;
+    // Device IDs
+    public static final int kArmPivotLeftMotorCANId = 15;
+    public static final int kArmPivotRightMotorCANId = 16;
 
+    public static final int telescopicArmSpark = 10;
 
     public static final double relEncoderToInitialGear = 1.0/48;
 
     public static final double falconToFinalGear = 1.0/240;
     public static final double encoderResolution = 1.0/2048;
-    //Change this
+
     public static boolean leftPivotInverted = true;
 }
