@@ -9,13 +9,54 @@ public class ArmConstants {
     public static final double maxAngleRad = Units.degreesToRadians(115.0);
 
     public static final double kArmExtensionMinPositionInches = 41;
-    public static final double zeroExtensionIn = 1.618 + kArmExtensionMinPositionInches;
-    public static final double kArmExtensionMaxTravelInches = 16;
-    public static final double kArmExtensionMaxPositionInches = kArmExtensionMaxTravelInches + kArmExtensionMinPositionInches;
+    public static final double kArmExtensionMinTravelInches = 0;
+    public static final double kArmExtensionMaxTravelInches = 18.3;
 
-    public static final double extensionEncoderToInches =  1.0/.25;
+    public static final double kArmExtensionMaxPositionInches = 
+        kArmExtensionMaxTravelInches + 
+            (kArmExtensionMinPositionInches - kArmExtensionMinTravelInches) ;
 
-    public static final double maxExtensionIn = 57;
+    public enum ArmMode {
+        REST (
+            "Neutral" /* name of the arm mode */,
+            1 /* arm pivot angle in degrees */,
+            3 /* extension travel in inches, from MinTravelInches to MaxTravelInches */),
+        
+        OFF_GROUND (
+            "Neutral" /* name of the arm mode */,
+            1 /* arm pivot angle in degrees */,
+            3 /* extension travel in inches, from MinTravelInches to MaxTravelInches */),
+
+        SUB_STATION (
+            "Neutral" /* name of the arm mode */,
+            1 /* arm pivot angle in degrees */,
+            3 /* extension travel in inches, from MinTravelInches to MaxTravelInches */),
+        
+        NODE1 (
+            "Neutral" /* name of the arm mode */,
+            1 /* arm pivot angle in degrees */,
+            3 /* extension travel in inches, from MinTravelInches to MaxTravelInches */),
+        
+        NODE2 (
+            "Neutral" /* name of the arm mode */,
+            1 /* arm pivot angle in degrees */,
+            3 /* extension travel in inches, from MinTravelInches to MaxTravelInches */),
+        
+        NODE3 (
+            "Neutral" /* name of the arm mode */,
+            1 /* arm pivot angle in degrees */,
+            3 /* extension travel in inches, from MinTravelInches to MaxTravelInches */)
+        
+        public final String name;
+        public final double pivotAngleDegrees;
+        public final double extensionTravelInches;
+
+        private ArmMode(String name, double pivotAngleDegrees, double extensionTravelInches) {
+            this.name = name;
+            this.pivotAngleDegrees = pivotAngleDegrees;
+            this.extensionTravelInches = extensionTravelInches;
+        }
+    }
 
     // Setpoints
     public static final double[] extensionLevelsIn = {kArmExtensionMinPositionInches, kArmExtensionMinPositionInches, 43.0}; //inches
